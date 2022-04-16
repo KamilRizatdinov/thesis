@@ -3,7 +3,7 @@ import {
   mean,
   peak,
   min,
-} from '../../../utils/benchmarkWrapper';
+} from '../../../../utils/benchmarkWrapper';
 
 const ascModule = new WebAssembly.Module(readbuffer(arguments[0]));
 
@@ -11,14 +11,15 @@ const results = await benchmarkWrapper({
   async before() {
     this.instance = new WebAssembly.Instance(ascModule, {
       env: {
-        abort() {
+        abort(msgPtr, fileNamePtr, lineNumber) {
+          console.log(msgPtr, fileNamePtr, lineNumber);
           throw Error('ARRGGH');
         },
       },
     });
   },
   async run() {
-    this.instance.exports.add(1, 2);
+    this.instance.exports.runNQueens(8);
   },
   numWarmup: 0,
 });

@@ -1,9 +1,14 @@
-import { benchmarkWrapper, mean, peak, min } from "../../../utils/benchmarkWrapper";
-import { add } from "./index.js";
+import {
+  benchmarkWrapper,
+  mean,
+  peak,
+  min,
+} from '../../../utils/benchmarkWrapper';
+import {add} from './index.js';
 
 const results = await benchmarkWrapper({
   async run() {
-    add(1,2);
+    add(1, 2);
   },
 });
 
