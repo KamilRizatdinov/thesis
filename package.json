@@ -1,0 +1,14 @@
+{
+  "name": "thesis",
+  "version": "1.0.0",
+  "description": "Source code for thesis",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kamil Rizatdinov",
+  "license": "MIT",
+  "dependencies": {
+    "assemblyscript": "^0.20.4"
+  }
+}
