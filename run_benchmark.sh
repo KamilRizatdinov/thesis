@@ -14,13 +14,13 @@ for language in $LANGUAGES ; do
     if [ $language = "javascript" ]
     then
       echo -n "${case},JavaScript,Ignition," | tee -a $OUTPUT
-      v8 --no-opt --module ${CASES_DIR}/${language}/${case}/bench.js >> $OUTPUT
+      v8 --no-opt --module ${CASES_DIR}/${case}/${language}/bench.js >> $OUTPUT
       echo "" 
       echo -n "${case},JavaScript,Sparkplug," | tee -a $OUTPUT
-      v8 --sparkplug --always-sparkplug --no-opt --module ${CASES_DIR}/${language}/${case}/bench.js >> $OUTPUT
+      v8 --sparkplug --always-sparkplug --no-opt --module ${CASES_DIR}/${case}/${language}/bench.js  >> $OUTPUT
       echo "" 
       echo -n "${case},JavaScript,Turbofan," | tee -a $OUTPUT
-      v8 --module ${CASES_DIR}/${language}/${case}/bench.js >> $OUTPUT
+      v8 --module ${CASES_DIR}/${case}/${language}/bench.js  >> $OUTPUT
       echo "" 
     else
       echo "${language} is not supported yet"
