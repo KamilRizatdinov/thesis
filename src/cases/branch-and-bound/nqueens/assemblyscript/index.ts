@@ -86,7 +86,7 @@ function nqueen_solver(
   var border_mask = 0;
   var index: i32;
 
-  var forbidden = new Uint32Array(32);
+  var forbidden = new Uint32Array(size);
 
   masks[0] = mask;
   left_masks[0] = left_mask;
@@ -244,6 +244,5 @@ function nqueenJS(size: i32, unique_solutions: Map<string, i32>): i32 {
 
 export function runNQueens(size: i32): void {
   var us = new Map<string, i32>();
-  var solutions: i32;
-  solutions = nqueenJS(size, us);
+  nqueenJS(size, us);
 }

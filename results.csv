@@ -1,4 +1,0 @@
-Case,Language,Compiler,Time (mean in ms),Time (peak in ms),Time (min in ms)
-simple,JavaScript,Ignition,64.18,67,62
-simple,JavaScript,Sparkplug,66.94,88,63
-simple,JavaScript,Turbofan,2.68,3,2
