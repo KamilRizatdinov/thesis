@@ -23,9 +23,10 @@
  * SOFTWARE.
  */
 
-Math.commonRandom = (function () {
-  var seed = 49734321;
-  return function () {
+var seed = 49734321;
+
+var commonRandom = (function (): () => i32 {
+  return function (): i32 {
     // Robert Jenkins' 32 bit integer hash function.
     seed = (seed + 0x7ed55d16 + (seed << 12)) & 0xffffffff;
     seed = (seed ^ 0xc761c23c ^ (seed >>> 19)) & 0xffffffff;
@@ -37,19 +38,22 @@ Math.commonRandom = (function () {
   };
 })();
 
-Math.commonRandomJS = function () {
-  return Math.abs(Math.commonRandom() / 0x7fffffff);
+var commonRandomJS = function (): f64 {
+  return Math.abs(commonRandom() / 0x7fffffff);
 };
 
-function randomMatrix(matrix) {
-  var size = Math.sqrt(matrix.length);
+function randomMatrix(matrix: Float64Array): void {
+  var size = <i32>Math.sqrt(matrix.length);
   var l = new Float64Array(matrix.length);
   var u = new Float64Array(matrix.length);
+  var i: i32;
+  var j: i32;
+  var k: i32;
 
-  for (var i = 0; i < size; ++i) {
-    for (var j = 0; j < size; ++j) {
+  for (i = 0; i < size; ++i) {
+    for (j = 0; j < size; ++j) {
       if (i > j) {
-        l[i * size + j] = Math.commonRandomJS();
+        l[i * size + j] = commonRandomJS();
       } else if (i == j) {
         l[i * size + j] = 1;
       } else {
@@ -57,19 +61,19 @@ function randomMatrix(matrix) {
       }
     }
   }
-  for (var j = 0; j < size; ++j) {
-    for (var i = 0; i < size; ++i) {
+  for (j = 0; j < size; ++j) {
+    for (i = 0; i < size; ++i) {
       if (i > j) {
         u[j * size + i] = 0;
       } else {
-        u[j * size + i] = Math.commonRandomJS();
+        u[j * size + i] = commonRandomJS();
       }
     }
   }
-  for (var i = 0; i < size; ++i) {
-    for (var j = 0; j < size; ++j) {
-      var sum = 0;
-      for (var k = 0; k < size; k++) {
+  for (i = 0; i < size; ++i) {
+    for (j = 0; j < size; ++j) {
+      var sum: f64 = 0.0;
+      for (k = 0; k < size; k++) {
         sum += l[i * size + k] * u[j * size + k];
       }
       matrix[i * size + j] = sum;
@@ -77,9 +81,11 @@ function randomMatrix(matrix) {
   }
 }
 
-function lud(matrix, size) {
-  var i, j, k;
-  var sum;
+function lud(matrix: Float64Array, size: i32): void {
+  var i: i32;
+  var j: i32;
+  var k: i32;
+  var sum: f64;
 
   for (i = 0; i < size; ++i) {
     for (j = i; j < size; ++j) {
@@ -99,8 +105,9 @@ function lud(matrix, size) {
   }
 }
 
-export function ludRun(size) {
+export function ludRun(size: i32): void {
   var matrix = new Float64Array(size * size);
   randomMatrix(matrix);
   lud(matrix, size);
+  console.log('done');
 }
