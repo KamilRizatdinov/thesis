@@ -23,10 +23,6 @@
  * SOFTWARE.
  */
 
-if (typeof performance === 'undefined') {
-  performance = Date;
-}
-
 var T = 1000; /* Number of static observations */
 var S = 2; /* Number of static symbols */
 var N = 60; /* Number of static states */
@@ -106,7 +102,7 @@ function init_ones_dev(ones, nsymbols) {
  * Supporting functions
  */
 function init_alpha(b_d, pi_d, nstates, alpha_d, ones_n_d, obs_t) {
-  i = 0;
+  var i = 0;
   for (i = 0; i < nstates; ++i) {
     alpha_d[i] = pi_d[i] * b_d[obs_t * nstates + i];
     ones_n_d[i] = 1.0;
@@ -531,10 +527,10 @@ function run_hmm_bwa(hmm, in_obs, iterations, threshold) {
 }
 
 /* Time the forward algorithm and vary the number of states */
-function bwa_hmm(v_, n_, s_, t_) {
+export function bwa_hmm(v_, n_, s_, t_) {
   /* Initialize variables */
-  hmm = {}; /* Initial HMM */
-  obs = {}; /* Observation sequence */
+  var hmm = {}; /* Initial HMM */
+  var obs = {}; /* Observation sequence */
   var a;
   var b;
   var pi;
@@ -590,11 +586,9 @@ function bwa_hmm(v_, n_, s_, t_) {
     hmm.pi = pi;
 
     /* Run the BWA on the observation sequence */
-    var t1 = performance.now();
-    log_lik = run_hmm_bwa(hmm, obs, ITERATIONS, 0);
-    var t2 = performance.now();
 
-    console.log('The time is ' + (t2 - t1) / 1000 + ' seconds');
+    log_lik = run_hmm_bwa(hmm, obs, ITERATIONS, 0);
+
     console.log('Observations\tLog_likelihood\n');
     console.log(n + '\t');
     console.log(log_lik + '\n');
@@ -631,11 +625,8 @@ function bwa_hmm(v_, n_, s_, t_) {
     hmm.pi = pi;
 
     /* Run the BWA on the observation sequence */
-    var t1 = performance.now();
     log_lik = run_hmm_bwa(hmm, obs, ITERATIONS, 0);
-    var t2 = performance.now();
 
-    console.log('The time is ' + (t2 - t1) / 1000 + ' seconds');
     console.log('Observations\tLog_likelihood\n');
     console.log(s + '\t');
     console.log(log_lik + '\n');
@@ -671,11 +662,8 @@ function bwa_hmm(v_, n_, s_, t_) {
     obs.data = obs_seq;
 
     /* Run the BWA on the observation sequence */
-    var t1 = performance.now();
     log_lik = run_hmm_bwa(hmm, obs, ITERATIONS, 0);
-    var t2 = performance.now();
 
-    console.log('The time is ' + (t2 - t1) / 1000 + ' seconds');
     console.log('Observations\tLog_likelihood\n');
     console.log(t + '\t');
     console.log(log_lik + '\n');
@@ -683,6 +671,5 @@ function bwa_hmm(v_, n_, s_, t_) {
   return {
     status: 1,
     options: 'bwa_hmm(' + [v_, n_, s_, t_].join(',') + ')',
-    time: (t2 - t1) / 1000,
   };
 }

@@ -23,11 +23,25 @@
  * SOFTWARE.
  */
 
-if (typeof performance === 'undefined') {
-  performance = Date;
-}
-
 var NUMBER_PAR_PER_BOX = 100;
+
+Math.commonRandom = (function () {
+  var seed = 49734321;
+  return function () {
+    // Robert Jenkins' 32 bit integer hash function.
+    seed = (seed + 0x7ed55d16 + (seed << 12)) & 0xffffffff;
+    seed = (seed ^ 0xc761c23c ^ (seed >>> 19)) & 0xffffffff;
+    seed = (seed + 0x165667b1 + (seed << 5)) & 0xffffffff;
+    seed = ((seed + 0xd3a2646c) ^ (seed << 9)) & 0xffffffff;
+    seed = (seed + 0xfd7046c5 + (seed << 3)) & 0xffffffff;
+    seed = (seed ^ 0xb55a4f09 ^ (seed >>> 16)) & 0xffffffff;
+    return seed;
+  };
+})();
+
+Math.commonRandomJS = function () {
+  return Math.abs(Math.commonRandom() / 0x7fffffff);
+};
 
 function DOT(A, B) {
   return A.x * B.x + A.y * B.y + A.z * B.z;
@@ -76,16 +90,8 @@ function space_mem() {
 }
 
 function lavamd(boxes1d) {
-  var time0, time1;
-
   // counters
-  var i,
-    j,
-    k,
-    l,
-    m,
-    n,
-    expected_boxes1d = 6;
+  var i, j, k, l, m, n;
 
   // system memory
   var par_cpu = {},
@@ -95,7 +101,6 @@ function lavamd(boxes1d) {
     qv_cpu,
     fv_cpu = [],
     nh;
-  var expectedAns = [4144561.0, 181665.0, -190914.0, 140373.0];
 
   // assign default values
   dim_cpu.cores_arg = 1;
@@ -105,11 +110,6 @@ function lavamd(boxes1d) {
     console.log('ERROR: Wrong value to -boxes1d parameter, cannot be <=0');
     return;
   }
-  console.log(
-    'Configuration used: cores = %d, boxes1d = %d\n',
-    dim_cpu.cores_arg,
-    dim_cpu.boxes1d_arg,
-  );
 
   // INPUTS
   par_cpu.alpha = 0.5;
@@ -201,53 +201,9 @@ function lavamd(boxes1d) {
   // output (forces)
   fv_cpu = createArray(space_mem, dim_cpu.space_elem); //(FOUR_VECTOR*)malloc(dim_cpu.space_mem);
 
-  time0 = performance.now();
-
   kernel_cpu(par_cpu, dim_cpu, box_cpu, rv_cpu, qv_cpu, fv_cpu);
 
   var sum = space_mem();
-  if (dim_cpu.boxes1d_arg == expected_boxes1d) {
-    for (i = 0; i < dim_cpu.space_elem; i = i + 1) {
-      sum.v += fv_cpu[i].v;
-      sum.x += fv_cpu[i].x;
-      sum.y += fv_cpu[i].y;
-      sum.z += fv_cpu[i].z;
-    }
-    if (
-      Math.round(sum.v) != expectedAns[0] ||
-      Math.round(sum.x) != expectedAns[1] ||
-      Math.round(sum.y) != expectedAns[2] ||
-      Math.round(sum.z) != expectedAns[3]
-    ) {
-      console.log(
-        'Expected: [' +
-          expectedAns[0] +
-          ', ' +
-          expectedAns[1] +
-          ', ' +
-          expectedAns[2] +
-          ', ' +
-          expectedAns[3] +
-          ']',
-      );
-      console.log(
-        'Got: [' + sum.v + ', ' + sum.x + ', ' + sum.y + ', ' + sum.z + ']',
-      );
-    }
-  } else {
-    console.log(
-      "WARNING: no self-checking for input size of '%d'\n",
-      dim_cpu.boxes1d_arg,
-    );
-  }
-
-  time1 = performance.now();
-  console.log('Total time: ' + (time1 - time0) / 1000 + ' s');
-  return {
-    status: 1,
-    options: 'lavamd(' + boxes1d + ')',
-    time: (time1 - time0) / 1000,
-  };
 }
 
 function kernel_cpu(par, dim, box, rv, qv, fv) {
@@ -305,6 +261,6 @@ function kernel_cpu(par, dim, box, rv, qv, fv) {
   }
 }
 
-function runLavaMD(boxes1d) {
+export function runLavaMD(boxes1d) {
   return lavamd(boxes1d);
 }

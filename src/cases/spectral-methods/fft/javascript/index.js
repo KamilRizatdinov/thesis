@@ -23,9 +23,23 @@
  * SOFTWARE.
  */
 
-if (typeof performance === 'undefined') {
-  performance = Date;
-}
+Math.commonRandom = (function () {
+  var seed = 49734321;
+  return function () {
+    // Robert Jenkins' 32 bit integer hash function.
+    seed = (seed + 0x7ed55d16 + (seed << 12)) & 0xffffffff;
+    seed = (seed ^ 0xc761c23c ^ (seed >>> 19)) & 0xffffffff;
+    seed = (seed + 0x165667b1 + (seed << 5)) & 0xffffffff;
+    seed = ((seed + 0xd3a2646c) ^ (seed << 9)) & 0xffffffff;
+    seed = (seed + 0xfd7046c5 + (seed << 3)) & 0xffffffff;
+    seed = (seed ^ 0xb55a4f09 ^ (seed >>> 16)) & 0xffffffff;
+    return seed;
+  };
+})();
+
+Math.commonRandomJS = function () {
+  return Math.abs(Math.commonRandom() / 0x7fffffff);
+};
 
 function complexPolar(r, t) {
   return {r: r * Math.cos(t), i: r * Math.sin(t)};
@@ -138,7 +152,7 @@ function printComplexMatrix(m) {
   for (var i = 0; i < m.length; ++i) printComplexArray(m[i]['r'], m[i]['i']);
 }
 
-function runFFT(twoExp) {
+export function runFFT(twoExp) {
   if (twoExp === undefined) {
     twoExp = 10;
   }
@@ -153,24 +167,6 @@ function runFFT(twoExp) {
   var data2D = randomComplexMatrix(n);
   var t1, t2;
 
-  /*
-    t1 = performance.now();
-    var results = fftSimple(data1D.r,data1D.i);
-    t2 = performance.now();
-    console.log("The total 1D FFT time for " + n + " size was " + (t2-t1)/1000 + " s");
-    */
-
-  t1 = performance.now();
   var results2D = fft2D(data2D);
-  t2 = performance.now();
-  console.log(
-    'The total 2D FFT time for ' +
-      n +
-      ' x ' +
-      n +
-      ' was ' +
-      (t2 - t1) / 1000 +
-      ' s',
-  );
-  return {status: 1, options: 'runFFT(' + twoExp + ')', time: (t2 - t1) / 1000};
+  return {status: 1, options: 'runFFT(' + twoExp + ')'};
 }

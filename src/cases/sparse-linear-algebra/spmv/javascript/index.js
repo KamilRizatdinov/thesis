@@ -23,15 +23,30 @@
  * SOFTWARE.
  */
 
-if (typeof performance === 'undefined') {
-  performance = Date;
-}
+var ArrayOld = Array;
 
-ArrayOld = Array;
 Array = function (dim) {
   var xs = new ArrayOld(dim);
   for (var i = 0; i < dim; ++i) xs[i] = 0;
   return xs;
+};
+
+Math.commonRandom = (function () {
+  var seed = 49734321;
+  return function () {
+    // Robert Jenkins' 32 bit integer hash function.
+    seed = (seed + 0x7ed55d16 + (seed << 12)) & 0xffffffff;
+    seed = (seed ^ 0xc761c23c ^ (seed >>> 19)) & 0xffffffff;
+    seed = (seed + 0x165667b1 + (seed << 5)) & 0xffffffff;
+    seed = ((seed + 0xd3a2646c) ^ (seed << 9)) & 0xffffffff;
+    seed = (seed + 0xfd7046c5 + (seed << 3)) & 0xffffffff;
+    seed = (seed ^ 0xb55a4f09 ^ (seed >>> 16)) & 0xffffffff;
+    return seed;
+  };
+})();
+
+Math.commonRandomJS = function () {
+  return Math.abs(Math.commonRandom() / 0x7fffffff);
 };
 
 /* Ziggurat code taken from james bloomer's implementation that can be
@@ -265,7 +280,7 @@ function spmv_csr(matrix, dim, rowv, colv, v, y, out) {
   }
 }
 
-function spmvRun(dim, density, stddev, iterations) {
+export function spmvRun(dim, density, stddev, iterations) {
   var m = generateRandomCSR(dim, density, stddev);
   var v = new Float32Array(dim);
   var y = new Float32Array(dim);
@@ -274,17 +289,6 @@ function spmvRun(dim, density, stddev, iterations) {
     a[i] = randf();
   });
 
-  var t1 = performance.now();
   for (var i = 0; i < iterations; ++i)
     spmv_csr(m.Ax, dim, m.Arow, m.Acol, v, y, out);
-  var t2 = performance.now();
-
-  console.log(
-    'The total time for the spmv is ' + (t2 - t1) / 1000 + ' seconds',
-  );
-  return {
-    status: 1,
-    options: 'spmvRun(' + [dim, density, stddev].join(',') + ')',
-    time: (t2 - t1) / 1000,
-  };
 }

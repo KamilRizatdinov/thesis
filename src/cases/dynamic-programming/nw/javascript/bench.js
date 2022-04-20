@@ -1,0 +1,19 @@
+import {
+  benchmarkWrapper,
+  mean,
+  peak,
+  min,
+} from '../../../../utils/benchmarkWrapper';
+import {nw} from './index.js';
+
+const results = await benchmarkWrapper({
+  async run() {
+    nw(
+      'adfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaff',
+      'asdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdfasdfsdfsdafasdfsdfsdfsdfsdfsdfsadgs',
+      {},
+    );
+  },
+});
+
+console.log([mean(results), peak(results), min(results)].join());
