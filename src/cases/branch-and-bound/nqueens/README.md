@@ -1,5 +1,4 @@
-N-Queens solver
-====================
+# N-Queens solver
 
 The n-queens solver is a backtrack & branch-and-bound application that
 provides a solution to the n-queens problem. That is, it tries to find
