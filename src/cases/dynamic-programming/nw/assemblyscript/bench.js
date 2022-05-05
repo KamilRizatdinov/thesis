@@ -4,7 +4,6 @@ import {
   peak,
   min,
 } from '../../../../utils/benchmarkWrapper';
-import {nw} from './index.js';
 
 const ascModule = new WebAssembly.Module(readbuffer(arguments[0]));
 
@@ -20,7 +19,7 @@ const results = await benchmarkWrapper({
     });
   },
   async run() {
-    this.instance.exports.nw(
+    this.instance.exports.main(
       'adfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaff',
       'asdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdfasdfsdfsdafasdfsdfsdfsdfsdfsdfsadgs',
     );

@@ -3,9 +3,10 @@ var MAX_INIT_EDGES = 4;
 var MIN_WEIGHT = 1;
 var MAX_WEIGHT = 1;
 
-Math.commonRandom = (function () {
-  var seed = 49734321;
-  return function () {
+var seed = 49734321;
+
+var commonRandom = (function (): () => i32 {
+  return function (): i32 {
     // Robert Jenkins' 32 bit integer hash function.
     seed = (seed + 0x7ed55d16 + (seed << 12)) & 0xffffffff;
     seed = (seed ^ 0xc761c23c ^ (seed >>> 19)) & 0xffffffff;
@@ -17,21 +18,40 @@ Math.commonRandom = (function () {
   };
 })();
 
-function node(starting, no_of_edges) {
+class Node {
+  starting: i32;
+  no_of_edges: i32;
+}
+
+class Edge {
+  dest: i32;
+  weight: i32;
+}
+
+class Graph {
+  h_graph_nodes: Array<Node>;
+  h_graph_mask: Array<bool>;
+  h_updating_graph_mask: Array<bool>;
+  h_graph_visited: Array<bool>;
+  h_cost: Array<i32>;
+  h_graph_edges: Array<i32>;
+}
+
+function node(starting: i32, no_of_edges: i32): Node {
   return {
     starting: starting,
     no_of_edges: no_of_edges,
   };
 }
 
-function edge(dest, weight) {
+function edge(dest: i32, weight: i32): Edge {
   return {
     dest: dest,
     weight: weight,
   };
 }
 
-export function BFSGraph(no_of_nodes) {
+export function main(no_of_nodes: i32): void {
   var inits = InitializeGraph(no_of_nodes);
   var h_graph_nodes = inits.h_graph_nodes;
   var h_graph_mask = inits.h_graph_mask;
@@ -41,16 +61,18 @@ export function BFSGraph(no_of_nodes) {
   var h_graph_edges = inits.h_graph_edges;
 
   var k = 0;
-  var stop;
+  var stop: bool;
+  var tid: i32;
+  var i: i32;
 
   do {
     stop = false;
 
-    for (var tid = 0; tid < no_of_nodes; ++tid) {
+    for (tid = 0; tid < no_of_nodes; ++tid) {
       if (h_graph_mask[tid]) {
         h_graph_mask[tid] = false;
         for (
-          var i = h_graph_nodes[tid].starting;
+          i = h_graph_nodes[tid].starting;
           i < h_graph_nodes[tid].no_of_edges + h_graph_nodes[tid].starting;
           ++i
         ) {
@@ -63,7 +85,7 @@ export function BFSGraph(no_of_nodes) {
       }
     }
 
-    for (var tid = 0; tid < no_of_nodes; ++tid) {
+    for (tid = 0; tid < no_of_nodes; ++tid) {
       if (h_updating_graph_mask[tid]) {
         h_graph_mask[tid] = true;
         h_graph_visited[tid] = true;
@@ -73,34 +95,34 @@ export function BFSGraph(no_of_nodes) {
     }
     ++k;
   } while (stop);
-
-  return {
-    status: 1,
-    options: 'BFSGraph(' + no_of_nodes + ')',
-  };
 }
 
-function InitializeGraph(no_of_nodes) {
-  var h_graph_nodes = new Array(no_of_nodes);
-  var h_graph_mask = new Uint8Array(no_of_nodes);
-  var h_updating_graph_mask = new Uint8Array(no_of_nodes);
-  var h_graph_visited = new Uint8Array(no_of_nodes);
-  var h_cost = new Uint32Array(no_of_nodes);
+function InitializeGraph(no_of_nodes: i32): Graph {
+  var h_graph_nodes = new Array<Node>(no_of_nodes);
+  var h_graph_mask = new Array<bool>(no_of_nodes);
+  var h_updating_graph_mask = new Array<bool>(no_of_nodes);
+  var h_graph_visited = new Array<bool>(no_of_nodes);
+  var h_cost = new Array<i32>(no_of_nodes);
 
-  var source = 0;
-  var graph = new Array(no_of_nodes);
-  for (var i = 0; i < no_of_nodes; ++i) {
-    graph[i] = [];
+  var source: i32 = 0;
+  var graph = new Array<Array<Edge>>(no_of_nodes);
+
+  var i: i32;
+  var j: i32;
+  var no_of_edges: i32;
+
+  for (i = 0; i < no_of_nodes; ++i) {
+    graph[i] = new Array<Edge>();
   }
 
-  for (var i = 0; i < no_of_nodes; ++i) {
-    var no_of_edges =
-      Math.abs(Math.commonRandom() % (MAX_INIT_EDGES - MIN_EDGES + 1)) +
+  for (i = 0; i < no_of_nodes; ++i) {
+    no_of_edges =
+      <i32>Math.abs(commonRandom() % (MAX_INIT_EDGES - MIN_EDGES + 1)) +
       MIN_EDGES;
-    for (var j = 0; j < no_of_edges; ++j) {
-      var node_id = Math.abs(Math.commonRandom() % no_of_nodes);
+    for (j = 0; j < no_of_edges; ++j) {
+      var node_id = <i32>Math.abs(commonRandom() % no_of_nodes);
       var weight =
-        Math.abs(Math.commonRandom() % (MAX_WEIGHT - MIN_WEIGHT + 1)) +
+        <i32>Math.abs(commonRandom() % (MAX_WEIGHT - MIN_WEIGHT + 1)) +
         MIN_WEIGHT;
 
       graph[i].push(edge(node_id, weight));
@@ -109,8 +131,8 @@ function InitializeGraph(no_of_nodes) {
   }
 
   var total_edges = 0;
-  for (var i = 0; i < no_of_nodes; ++i) {
-    var no_of_edges = graph[i].length;
+  for (i = 0; i < no_of_nodes; ++i) {
+    no_of_edges = graph[i].length;
     h_graph_nodes[i] = node(total_edges, no_of_edges);
     h_graph_mask[i] = false;
     h_updating_graph_mask[i] = false;
@@ -122,17 +144,17 @@ function InitializeGraph(no_of_nodes) {
   h_graph_mask[source] = true;
   h_graph_visited[source] = true;
 
-  var h_graph_edges = new Array(total_edges);
+  var h_graph_edges = new Array<i32>(total_edges);
 
   var k = 0;
-  for (var i = 0; i < no_of_nodes; ++i) {
-    for (var j = 0; j < graph[i].length; ++j) {
+  for (i = 0; i < no_of_nodes; ++i) {
+    for (j = 0; j < graph[i].length; ++j) {
       h_graph_edges[k] = graph[i][j].dest;
       ++k;
     }
   }
 
-  for (var i = 0; i < no_of_nodes; ++i) {
+  for (i = 0; i < no_of_nodes; ++i) {
     h_cost[i] = -1;
   }
   h_cost[source] = 0;
