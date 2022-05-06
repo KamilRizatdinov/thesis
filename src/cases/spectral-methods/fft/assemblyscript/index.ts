@@ -23,9 +23,20 @@
  * SOFTWARE.
  */
 
-Math.commonRandom = (function () {
-  var seed = 49734321;
-  return function () {
+class PolarCoord {
+  r: f64;
+  i: f64;
+}
+
+class PolarCoords {
+  r: Float64Array;
+  i: Float64Array;
+}
+
+var seed = 49734321;
+
+var commonRandom = (function (): () => i32 {
+  return function (): i32 {
     // Robert Jenkins' 32 bit integer hash function.
     seed = (seed + 0x7ed55d16 + (seed << 12)) & 0xffffffff;
     seed = (seed ^ 0xc761c23c ^ (seed >>> 19)) & 0xffffffff;
@@ -37,18 +48,20 @@ Math.commonRandom = (function () {
   };
 })();
 
-Math.commonRandomJS = function () {
-  return Math.abs(Math.commonRandom() / 0x7fffffff);
+var commonRandomJS = function (): f64 {
+  return Math.abs(commonRandom() / 0x7fffffff);
 };
 
-function complexPolar(r, t) {
+function complexPolar(r: f64, t: f64): PolarCoord {
   return {r: r * Math.cos(t), i: r * Math.sin(t)};
 }
 
-function fftSimple(r, i) {
+function fftSimple(r: Float64Array, i: Float64Array): PolarCoords {
   var N = r.length;
   var R = new Float64Array(N);
   var I = new Float64Array(N);
+
+  var k: i32;
 
   if (N === 1) {
     R[0] = r[0];
@@ -61,7 +74,7 @@ function fftSimple(r, i) {
   var dr = new Float64Array(N / 2);
   var di = new Float64Array(N / 2);
 
-  for (var k = 0; k < N / 2; ++k) {
+  for (k = 0; k < N / 2; ++k) {
     er[k] = r[2 * k];
     ei[k] = i[2 * k];
     dr[k] = r[2 * k + 1];
@@ -75,7 +88,7 @@ function fftSimple(r, i) {
   var DR = D.r;
   var DI = D.i;
 
-  for (var k = 0; k < r.length / 2; ++k) {
+  for (k = 0; k < r.length / 2; ++k) {
     var c = complexPolar(1, (-2.0 * Math.PI * k) / N);
     var t = DR[k];
     DR[k] = t * c.r - DI[k] * c.i;
@@ -92,82 +105,61 @@ function fftSimple(r, i) {
   return {r: R, i: I};
 }
 
-function transpose(m) {
-  var tempr, tempi;
+function transpose(m: Array<PolarCoords>): void {
+  var tempr: f64;
+  var tempi: f64;
   var N = m.length;
   for (var i = 0; i < N; ++i) {
     for (var j = 0; j < i; ++j) {
-      tempr = m[i]['r'][j];
-      tempi = m[i]['i'][j];
+      tempr = m[i].r[j];
+      tempi = m[i].i[j];
 
-      m[i]['r'][j] = m[j]['r'][i];
-      m[i]['i'][j] = m[j]['i'][i];
+      m[i].r[j] = m[j].r[i];
+      m[i].i[j] = m[j].i[i];
 
-      m[j]['r'][i] = tempr;
-      m[j]['i'][i] = tempi;
+      m[j].r[i] = tempr;
+      m[j].i[i] = tempi;
     }
   }
 }
 
-function fft2D(m) {
-  var M = [];
-  for (var i = 0; i < m.length; ++i) {
-    M[i] = fftSimple(m[i]['r'], m[i]['i']);
+function fft2D(m: Array<PolarCoords>): Array<PolarCoords> {
+  var M = new Array<PolarCoords>(m.length);
+  var i: i32;
+
+  for (i = 0; i < m.length; ++i) {
+    M[i] = fftSimple(m[i].r, m[i].i);
   }
   transpose(M);
-  for (var i = 0; i < m.length; ++i) {
-    M[i] = fftSimple(M[i]['r'], M[i]['i']);
+  for (i = 0; i < m.length; ++i) {
+    M[i] = fftSimple(M[i].r, M[i].i);
   }
   transpose(M);
   return M;
 }
 
-function randomComplexArray(n) {
+function randomComplexArray(n: i32): PolarCoords {
   // TA
   var r = new Float64Array(n);
   var i = new Float64Array(n);
 
   for (var j = 0; j < n; ++j) {
-    r[j] = Math.commonRandomJS() * 2 - 1;
-    i[j] = Math.commonRandomJS() * 2 - 1;
+    r[j] = commonRandomJS() * 2 - 1;
+    i[j] = commonRandomJS() * 2 - 1;
   }
   return {r: r, i: i};
 }
 
-function randomComplexMatrix(n) {
-  var M = [];
+function randomComplexMatrix(n: i32): Array<PolarCoords> {
+  var M = new Array<PolarCoords>(n);
   for (var i = 0; i < n; ++i) M[i] = randomComplexArray(n); // TA
   return M;
 }
 
-function printComplexArray(r, i) {
-  // TA
-  var a = [];
-  for (var j = 0; j < r.length; ++j)
-    a[j] = r[j].toFixed(6) + ' + ' + i[j].toFixed(6) + 'i';
-  console.log(a.join('\n'));
-}
-
-function printComplexMatrix(m) {
-  for (var i = 0; i < m.length; ++i) printComplexArray(m[i]['r'], m[i]['i']);
-}
-
-export function runFFT(twoExp) {
-  if (twoExp === undefined) {
-    twoExp = 10;
-  }
-
-  if (twoExp < 0 || twoExp > 30) {
-    throw new Error(
-      "ERROR: invalid exponent of '" + twoExp + "' for input size",
-    );
-  }
-  var n = 1 << twoExp;
+export function main(twoExp: i32 = 10): void {
+  var n: i32 = 1 << twoExp;
   var data1D = randomComplexArray(n);
   var data2D = randomComplexMatrix(n);
 
-  console.log('HERE');
-
   var results2D = fft2D(data2D);
-  return {status: 1, options: 'runFFT(' + twoExp + ')'};
 }

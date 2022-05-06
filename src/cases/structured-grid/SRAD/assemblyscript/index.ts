@@ -23,14 +23,14 @@
  * SOFTWARE.
  */
 
-var Nr = 502;
-var Nc = 458;
-var Ne = Nr * Nc;
+var Nr: i32 = 502;
+var Nc: i32 = 458;
+var Ne: i32 = Nr * Nc;
 
-var i;
-var j;
-var iter;
-var L;
+var i: i32;
+var j: i32;
+var iter: i32;
+var L: f32;
 
 var r1 = 0; // top row index of ROI
 var r2 = Nr - 1; // bottom row index of ROI
@@ -38,7 +38,7 @@ var c1 = 0; // left column index of ROI
 var c2 = Nc - 1; // right column index of ROI
 
 // ROI image size
-var NeROI = (r2 - r1 + 1) * (c2 - c1 + 1); // number of elements in ROI, ROI size
+var NeROI: f32 = <f32>((r2 - r1 + 1) * (c2 - c1 + 1)); // number of elements in ROI, ROI size
 
 // allocate variables for surrounding pixels
 var iN = new Int32Array(Nr); // north surrounding element
@@ -76,20 +76,18 @@ jE[Nc - 1] = Nc - 1; // changes IMAGE rightmost column index from Nc to Nc-1
 
 var image = new Float32Array(Ne);
 var data = new Float32Array(Ne);
-var q0sqr;
+var q0sqr: f32;
 
 //write image
-function writeImage() {
+function writeImage(): void {
   for (i = 0; i < Ne; i++) {
-    data[i] = /*Math.round*/ (<i32>Math.log(image[i]) * 255) | 0;
+    data[i] = <f32>((<i32>Math.log(image[i]) * 255) | 0);
   }
-  /*ctx.clearRect(0, 0, Nc, Nr);
-    ctx.putImageData(imageData, 0, 0);*/
 }
 
-function calculateSum() {
-  var sum = 0;
-  var sum2 = 0;
+function calculateSum(): void {
+  var sum: f32 = 0.0;
+  var sum2: f32 = 0.0;
   for (i = r1; i <= r2; i++) {
     // do for the range of rows in ROI
     for (j = c1; j <= c2; j++) {
@@ -104,7 +102,7 @@ function calculateSum() {
   q0sqr = varROI / (meanROI * meanROI); // gets standard deviation of ROI
 }
 
-function calculateDiffusion() {
+function calculateDiffusion(): void {
   for (j = 0; j < Nc; j++) {
     // do for the range of columns in IMAGE
     for (i = 0; i < Nr; i++) {
@@ -129,13 +127,13 @@ function calculateDiffusion() {
       L = (dN[k] + dS[k] + dW[k] + dE[k]) / Jc; // laplacian (based on derivatives)
 
       // ICOV (equ 31/35)
-      var num = 0.5 * G2 - (1.0 / 16.0) * (L * L); // num (based on gradient and laplacian)
-      var den = 1 + 0.25 * L; // den (based on laplacian)
-      var qsqr = num / (den * den); // qsqr (based on num and den)
+      var num: f32 = 0.5 * G2 - (1.0 / 16.0) * (L * L); // num (based on gradient and laplacian)
+      var den: f32 = 1 + 0.25 * L; // den (based on laplacian)
+      var qsqr: f32 = num / (den * den); // qsqr (based on num and den)
 
       // diffusion coefficent (equ 33) (every element of IMAGE)
       den = (qsqr - q0sqr) / (q0sqr * (1 + q0sqr)); // den (based on qsqr and q0sqr)
-      c[k] = 1.0 / (1.0 + den); // diffusion coefficient (based on den)
+      c[k] = <f32>(1.0 / (1.0 + den)); // diffusion coefficient (based on den)
 
       // saturate diffusion coefficent to 0-1 range
       if (c[k] < 0) {
@@ -150,7 +148,7 @@ function calculateDiffusion() {
   }
 }
 
-function adjustValues(lambda) {
+function adjustValues(lambda: f32): void {
   lambda = 0.25 * lambda;
   for (j = 0; j < Nc; j++) {
     // do for the range of columns in IMAGE
@@ -172,7 +170,7 @@ function adjustValues(lambda) {
   }
 }
 
-function SRAD(niter, lambda) {
+function SRAD(niter: i32, lambda: f32): void {
   for (iter = 0; iter < niter; iter++) {
     calculateSum();
     // directional derivatives, ICOV, diffusion coefficent
@@ -184,11 +182,11 @@ function SRAD(niter, lambda) {
   }
 }
 
-export function runSRAD(niter, lambda) {
-  var output = 0;
+export function main(niter: i32, lambda: f32): void {
+  var output: f32 = 0.0;
   var image = new Float32Array(Ne);
   for (i = 0; i < Ne; i++) {
-    image[i] = Math.exp(data[i] / 255);
+    image[i] = <f32>Math.exp(data[i] / 255);
   }
   SRAD(niter, lambda);
   writeImage();
@@ -196,9 +194,4 @@ export function runSRAD(niter, lambda) {
   for (i = 0; i < Nr; i++) {
     output = output + data[i];
   }
-
-  return {
-    status: 1,
-    options: 'runSRAD(' + [niter, lambda].join(',') + ')',
-  };
 }

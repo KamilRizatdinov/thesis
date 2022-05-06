@@ -11,3 +11,10 @@ export function add(a: i32, b: i32): Map<i32, Map<i32, Array<i32>>> {
 
   return mat;
 }
+
+class A {
+  x: i32;
+  constructor() {
+    this.x = 1;
+  }
+}
