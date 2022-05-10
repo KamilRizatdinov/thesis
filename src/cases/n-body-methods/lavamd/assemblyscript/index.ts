@@ -69,7 +69,7 @@ function DOT(A: Box, B: Box): f64 {
 function createArray(creator: () => Box, size: i32): Array<Box> {
   var arr = new Array<Box>(size);
   for (var i = 0; i < size; i++) {
-    arr.push(creator());
+    arr[i] = creator();
   }
   return arr;
 }

@@ -23,46 +23,65 @@
  * SOFTWARE.
  */
 
-var T = 1000; /* Number of static observations */
-var S = 2; /* Number of static symbols */
-var N = 60; /* Number of static states */
-var ITERATIONS = 1; /* Number of iterations */
-var EXIT_ERROR = 1;
+var T: i32 = 1000; /* Number of static observations */
+var S: i32 = 2; /* Number of static symbols */
+var N: i32 = 60; /* Number of static states */
+var ITERATIONS: i32 = 1; /* Number of iterations */
+var EXIT_ERROR: f32 = 1;
 
 // /* Global variables for device */
-var nstates; /* The number of states in the HMM */
-var nsymbols; /* The number of possible symbols */
-var obs; /* The observation sequence */
-var length; /* The length of the observation sequence */
-var scale; /* Scaling factor as determined by alpha */
+var nstates: i32; /* The number of states in the HMM */
+var nsymbols: i32; /* The number of possible symbols */
+var obs: Int32Array; /* The observation sequence */
+var length: i32; /* The length of the observation sequence */
+var scale: Float32Array; /* Scaling factor as determined by alpha */
 
-var alpha;
-var beta;
-var ones_n;
-var ones_s;
-var gamma_sum;
-var xi_sum;
-var c;
+var alpha: Float32Array;
+var beta: Float32Array;
+var ones_n: Float32Array;
+var ones_s: Float32Array;
+var gamma_sum: Float32Array;
+var xi_sum: Float32Array;
+var c: Float32Array;
 
 /**
  * Calculates the dot product of two vectors.
  * Both vectors must be atleast of length n
  */
-function dot_product(n, x, offsetx, y, offsety) {
-  var result = 0.0;
+function dot_product(
+  n: i32,
+  x: Float32Array,
+  offsetx: i32,
+  y: Float32Array,
+  offsety: i32,
+): f32 {
+  var result: f32 = 0.0;
   var i = 0;
   if (!x || !y || n === 0) return result;
   for (i = 0; i < n; ++i) result += x[i + offsetx] * y[i + offsety];
   return result;
 }
 
-function mat_vec_mul(trans, m, n, a, lda, x, offsetx, y, offsety) {
+function mat_vec_mul(
+  trans: string,
+  m: i32,
+  n: i32,
+  a: Float32Array,
+  lda: i32,
+  x: Float32Array,
+  offsetx: i32,
+  y: Float32Array,
+  offsety: i32,
+): void {
   if (trans != 'n' && trans != 't') {
     return;
   }
 
-  var i, j, n_size, m_size;
-  var sum;
+  var i: i32;
+  var j: i32;
+  var n_size: i32;
+  var m_size: i32;
+  var sum: f32;
   if (lda == m) {
     n_size = n;
     m_size = m;
@@ -89,63 +108,63 @@ function mat_vec_mul(trans, m, n, a, lda, x, offsetx, y, offsety) {
   }
 }
 
-function init_ones_dev(ones, nsymbols) {
-  var i;
+function init_ones_dev(ones: Float32Array, nsymbols: i32): void {
+  var i: i32;
   for (i = 0; i < nsymbols; ++i) ones[i] = 1.0;
 }
 
 /*******************************************************************************
  * Supporting functions
  */
-function init_alpha(b_d, pi_d, nstates, alpha_d, ones_n_d, obs_t) {
-  var i = 0;
+function init_alpha(
+  b_d: Float32Array,
+  pi_d: Float32Array,
+  nstates: i32,
+  alpha_d: Float32Array,
+  ones_n_d: Float32Array,
+  obs_t: i32,
+): void {
+  var i: i32;
   for (i = 0; i < nstates; ++i) {
     alpha_d[i] = pi_d[i] * b_d[obs_t * nstates + i];
     ones_n_d[i] = 1.0;
   }
 }
 
-function scale_alpha_values(nstates, alpha_d, offset, scale) {
-  var i = 0;
+function scale_alpha_values(
+  nstates: i32,
+  alpha_d: Float32Array,
+  offset: i32,
+  scale: f32,
+): void {
+  var i: i32;
   for (i = 0; i < nstates; ++i)
     alpha_d[offset + i] = alpha_d[offset + i] / scale;
 }
 
-function calc_alpha_dev(nstates, alpha_d, offset, b_d, obs_t) {
+function calc_alpha_dev(
+  nstates: i32,
+  alpha_d: Float32Array,
+  offset: i32,
+  b_d: Float32Array,
+  obs_t: i32,
+): void {
   var i = 0;
   for (i = 0; i < nstates; ++i) {
     alpha_d[offset + i] = alpha_d[offset + i] * b_d[obs_t * nstates + i];
   }
 }
-function log10(val) {
-  return Math.log(val) / Math.LN10;
-}
 
-function printIM(aa, m, n) {
-  var i = 0;
-  var j = 0;
-  for (i = 0; i < m; ++i) {
-    for (j = 0; j < n; ++j) {
-      console.log(aa[i * n + j]);
-    }
-  }
-}
-function printM(aa, m, n) {
-  var i = 0;
-  var j = 0;
-  for (i = 0; i < m; ++i) {
-    for (j = 0; j < n; ++j) {
-      console.log(aa[i * n + j]);
-    }
-  }
+function log10(val: f32): f32 {
+  return <f32>(Math.log(val) / Math.LN10);
 }
 
 /* Calculates the forward variables (alpha) for an HMM and obs. sequence */
-function calc_alpha(a, b, pi) {
-  var log_lik;
-  var t;
-  var offset_cur;
-  var offset_prev;
+function calc_alpha(a: Float32Array, b: Float32Array, pi: Float32Array): f32 {
+  var log_lik: f32;
+  var t: i32;
+  var offset_cur: i32;
+  var offset_prev: i32;
 
   // initialize alpha variables
   init_alpha(b, pi, nstates, alpha, ones_n, obs[0]);
@@ -194,15 +213,27 @@ function calc_alpha(a, b, pi) {
   return log_lik;
 }
 
-function init_beta_dev(nstates, beta_d, offset, scale) {
-  var i = 0;
+function init_beta_dev(
+  nstates: i32,
+  beta_d: Float32Array,
+  offset: i32,
+  scale: f32,
+): void {
+  var i: i32;
   for (i = 0; i < nstates; ++i) {
     beta_d[offset + i] = 1.0 / scale;
   }
 }
 
-function calc_beta_dev(beta_d, b_d, scale_t, nstates, obs_t, t) {
-  var i;
+function calc_beta_dev(
+  beta_d: Float32Array,
+  b_d: Float32Array,
+  scale_t: f32,
+  nstates: i32,
+  obs_t: i32,
+  t: i32,
+): void {
+  var i: i32;
   for (i = 0; i < nstates; ++i) {
     beta_d[t * nstates + i] =
       (beta_d[(t + 1) * nstates + i] * b_d[obs_t * nstates + i]) / scale_t;
@@ -210,10 +241,10 @@ function calc_beta_dev(beta_d, b_d, scale_t, nstates, obs_t, t) {
 }
 
 /* Calculates the backward variables (beta) */
-function calc_beta(a, b) {
+function calc_beta(a: Float32Array, b: Float32Array): f32 {
   /* Initialize beta variables */
-  var offset = (length - 1) * nstates;
-  var t;
+  var offset: i32 = (length - 1) * nstates;
+  var t: i32;
   init_beta_dev(nstates, beta, offset, scale[length - 1]);
   /* Calculate the rest of the beta variables */
   for (t = length - 2; t >= 0; t--) {
@@ -234,17 +265,22 @@ function calc_beta(a, b) {
   return 0;
 }
 
-function calc_gamma_dev(gamma_sum_d, alpha_d, beta_d, nstates, t) {
-  var i;
+function calc_gamma_dev(
+  gamma_sum_d: Float32Array,
+  alpha_d: Float32Array,
+  beta_d: Float32Array,
+  nstates: i32,
+  t: i32,
+): void {
+  var i: i32;
   for (i = 0; i < nstates; ++i) {
     gamma_sum_d[i] += alpha_d[t * nstates + i] * beta_d[t * nstates + i];
   }
 }
 
 /* Calculates the gamma sum */
-function calc_gamma_sum() {
-  var size;
-  var t;
+function calc_gamma_sum(): void {
+  var t: i32;
 
   for (t = 0; t < nstates; ++t) gamma_sum[t] = 0.0;
   /* Find sum of gamma variables */
@@ -254,17 +290,18 @@ function calc_gamma_sum() {
 }
 
 function calc_xi_sum_dev(
-  xi_sum_d,
-  a_d,
-  b_d,
-  alpha_d,
-  beta_d,
-  sum_ab,
-  nstates,
-  obs_t,
-  t,
-) {
-  var i, j;
+  xi_sum_d: Float32Array,
+  a_d: Float32Array,
+  b_d: Float32Array,
+  alpha_d: Float32Array,
+  beta_d: Float32Array,
+  sum_ab: f32,
+  nstates: i32,
+  obs_t: i32,
+  t: i32,
+): void {
+  var i: i32;
+  var j: i32;
   for (i = 0; i < nstates; ++i) {
     for (j = 0; j < nstates; ++j) {
       xi_sum_d[j * nstates + i] +=
@@ -278,9 +315,9 @@ function calc_xi_sum_dev(
 }
 
 /* Calculates the sum of xi variables */
-function calc_xi_sum(a, b) {
-  var sum_ab;
-  var t;
+function calc_xi_sum(a: Float32Array, b: Float32Array): f32 {
+  var sum_ab: f32;
+  var t: i32;
 
   for (t = 0; t < nstates; ++t) xi_sum[t] = 0;
   /* Find the sum of xi variables */
@@ -293,16 +330,17 @@ function calc_xi_sum(a, b) {
 }
 
 function est_a_dev(
-  a_d,
-  alpha_d,
-  beta_d,
-  xi_sum_d,
-  gamma_sum_d,
-  sum_ab,
-  nstates,
-  length,
-) {
-  var i, j;
+  a_d: Float32Array,
+  alpha_d: Float32Array,
+  beta_d: Float32Array,
+  xi_sum_d: Float32Array,
+  gamma_sum_d: Float32Array,
+  sum_ab: f32,
+  nstates: i32,
+  length: i32,
+): void {
+  var i: i32;
+  var j: i32;
   for (i = 0; i < nstates; ++i) {
     for (j = 0; j < nstates; ++j) {
       a_d[j * nstates + i] =
@@ -313,8 +351,9 @@ function est_a_dev(
   }
 }
 
-function scale_a_dev(a_d, c_d, nstates) {
-  var i, j;
+function scale_a_dev(a_d: Float32Array, c_d: Float32Array, nstates: i32): void {
+  var i: i32;
+  var j: i32;
   for (i = 0; i < nstates; ++i) {
     for (j = 0; j < nstates; ++j) {
       a_d[j * nstates + i] = a_d[j * nstates + i] / c_d[j];
@@ -322,11 +361,8 @@ function scale_a_dev(a_d, c_d, nstates) {
   }
 }
 /* Re-estimates the state transition probabilities (A) */
-function estimate_a(a) {
-  var sum_ab;
-
-  /* Calculate denominator */
-  sum_ab = dot_product(
+function estimate_a(a: Float32Array): f32 {
+  var sum_ab: f32 = dot_product(
     nstates,
     alpha,
     (length - 1) * nstates,
@@ -350,21 +386,37 @@ function estimate_a(a) {
 }
 
 /* Accumulate B values */
-function acc_b_dev(b_d, alpha_d, beta_d, sum_ab, nstates, nsymbols, obs_t, t) {
-  var i, j;
-  for (i = 0; i < nstates; ++i) {
-    for (j = 0; j < nsymbols; ++j) {
-      if (j == obs_t) {
-        b_d[j * nstates + i] +=
-          (alpha_d[t * nstates + i] * beta_d[t * nstates + i]) / sum_ab;
-      }
-    }
-  }
+function acc_b_dev(
+  b_d: Float32Array,
+  alpha_d: Float32Array,
+  beta_d: Float32Array,
+  sum_ab: f32,
+  nstates: i32,
+  nsymbols: i32,
+  obs_t: i32,
+  t: i32,
+): void {
+  // var i: i32;
+  // var j: i32;
+  // for (i = 0; i < nstates; ++i) {
+  //   for (j = 0; j < nsymbols; ++j) {
+  //     if (j == obs_t) {
+  //       b_d[j * nstates + i] +=
+  //         (alpha_d[t * nstates + i] * beta_d[t * nstates + i]) / sum_ab;
+  //     }
+  //   }
+  // }
 }
 
 /* Re-estimate B values */
-function est_b_dev(b_d, gamma_sum_d, nstates, nsymbols) {
-  var i, j;
+function est_b_dev(
+  b_d: Float32Array,
+  gamma_sum_d: Float32Array,
+  nstates: i32,
+  nsymbols: i32,
+): void {
+  var i: i32;
+  var j: i32;
   for (i = 0; i < nstates; ++i) {
     for (j = 0; j < nsymbols; ++j) {
       b_d[j * nstates + i] = b_d[j * nstates + i] / gamma_sum_d[i];
@@ -373,8 +425,14 @@ function est_b_dev(b_d, gamma_sum_d, nstates, nsymbols) {
 }
 
 /* Normalize B matrix */
-function scale_b_dev(b_d, c_d, nstates, nsymbols) {
-  var i, j;
+function scale_b_dev(
+  b_d: Float32Array,
+  c_d: Float32Array,
+  nstates: i32,
+  nsymbols: i32,
+): void {
+  var i: i32;
+  var j: i32;
   for (i = 0; i < nstates; ++i) {
     for (j = 0; j < nsymbols; ++j) {
       if (Math.abs(b_d[i * nsymbols + j]) < 0.000001) {
@@ -382,28 +440,18 @@ function scale_b_dev(b_d, c_d, nstates, nsymbols) {
       } else {
         b_d[i * nsymbols + j] = b_d[i * nsymbols + j] / c_d[i];
       }
-      // if (fabs(b_d[(j * nstates) + i]) <0.000001)
-      // {
-      //   b_d[(j * nstates) + i] = 1e-10;
-      //   printf("something hits here\n");
-      // }
-      // else
-      // {
-      //   b_d[(j * nstates) + i] = b_d[(j * nstates) + i] / c_d[i];
-      // }
     }
   }
 }
 
 /* Re-estimates the output symbol probabilities (B) */
-function estimate_b(b) {
-  var sum_ab;
-  var t;
-  var offset;
+function estimate_b(b: Float32Array): f32 {
+  var sum_ab: f32;
+  var t: i32;
 
   for (t = 0; t < nstates * nsymbols; ++t) b[t] = 0.0;
 
-  for (t = 0; t < length; t++) {
+  for (t = 0; t < length - 1; t++) {
     /* Calculate denominator */
     sum_ab = dot_product(nstates, alpha, t * nstates, beta, t * nstates);
     acc_b_dev(b, alpha, beta, sum_ab, nstates, nsymbols, obs[t + 1], t);
@@ -421,18 +469,23 @@ function estimate_b(b) {
   scale_b_dev(b, c, nstates, nsymbols);
   return 0;
 }
-function est_pi_dev(pi_d, alpha_d, beta_d, sum_ab, nstates) {
-  var i;
+
+function est_pi_dev(
+  pi_d: Float32Array,
+  alpha_d: Float32Array,
+  beta_d: Float32Array,
+  sum_ab: f32,
+  nstates: i32,
+): void {
+  var i: i32;
   for (i = 0; i < nstates; ++i) {
     pi_d[i] = (alpha_d[i] * beta_d[i]) / sum_ab;
   }
 }
 
 /* Re-estimates the initial state probabilities (Pi) */
-function estimate_pi(pi) {
-  var sum_ab;
-  /* Calculate denominator */
-  sum_ab = dot_product(nstates, alpha, 0, beta, 0);
+function estimate_pi(pi: Float32Array): f32 {
+  var sum_ab: f32 = dot_product(nstates, alpha, 0, beta, 0);
 
   /* Estimate Pi values */
   est_pi_dev(pi, alpha, beta, sum_ab, nstates);
@@ -445,14 +498,19 @@ function estimate_pi(pi) {
 //  */
 
 // /* Runs the Baum-Welch Algorithm on the supplied HMM and observation sequence */
-function run_hmm_bwa(hmm, in_obs, iterations, threshold) {
+function run_hmm_bwa(
+  hmm: HMM,
+  in_obs: OBS,
+  iterations: i32,
+  threshold: i32,
+): f32 {
   /* Host-side variables */
-  var a;
-  var b;
-  var pi;
-  var new_log_lik;
-  var old_log_lik = 0;
-  var iter;
+  var a: Float32Array;
+  var b: Float32Array;
+  var pi: Float32Array;
+  var new_log_lik: f32 = 0;
+  var old_log_lik: f32 = 0;
+  var iter: i32;
 
   /* Initialize HMM values */
   a = hmm.a;
@@ -512,7 +570,10 @@ function run_hmm_bwa(hmm, in_obs, iterations, threshold) {
 
     /* check log_lik vs. threshold */
     if (threshold > 0 && iter > 0) {
-      if (fabs(pow(10, new_log_lik) - pow(10, old_log_lik)) < threshold) {
+      if (
+        Math.abs(Math.pow(10, new_log_lik) - Math.pow(10, old_log_lik)) <
+        threshold
+      ) {
         break;
       }
     }
@@ -522,150 +583,135 @@ function run_hmm_bwa(hmm, in_obs, iterations, threshold) {
   return new_log_lik;
 }
 
+class HMM {
+  nstates: i32;
+  nsymbols: i32;
+  a: Float32Array;
+  b: Float32Array;
+  pi: Float32Array;
+
+  constructor(
+    nstates: i32,
+    nsymbols: i32,
+    a: Float32Array,
+    b: Float32Array,
+    pi: Float32Array,
+  ) {
+    this.nstates = nstates;
+    this.nsymbols = nsymbols;
+    this.a = a;
+    this.b = b;
+    this.pi = pi;
+  }
+}
+
+class OBS {
+  length: i32;
+  data: Int32Array;
+
+  constructor(length: i32, data: Int32Array) {
+    this.length = length;
+    this.data = data;
+  }
+}
+
 /* Time the forward algorithm and vary the number of states */
-export function main(v_, n_, s_, t_) {
+export function main(v_: string, n_: i32, s_: i32, t_: i32): void {
   /* Initialize variables */
-  var hmm = {}; /* Initial HMM */
-  var obs = {}; /* Observation sequence */
-  var a;
-  var b;
-  var pi;
-  var obs_seq;
-  var log_lik; /* Output likelihood of FO */
-  var mul;
-  var m;
+  var hmm: HMM;
+  var obs: OBS; /* Observation sequence */
+  var a: Float32Array;
+  var b: Float32Array;
+  var pi: Float32Array;
+  var obs_seq: Int32Array;
   var s = s_ || S,
     t = t_ || T;
   var n = n_ || N;
   var v_model = v_;
-  var i;
-
-  if (!v_model) {
-    console.log('invalid arguments, must specify varying model');
-    return 1;
-  }
+  var i: i32;
 
   if (v_model == 'n') {
     /* Create observation sequence */
-    obs.length = T;
     obs_seq = new Int32Array(T);
     for (i = 0; i < T; i++) {
       obs_seq[i] = 0;
     }
-    obs.data = obs_seq;
 
-    /* Run timed tests from 1*mul to 9*mul states */
-    if (n >= 8000) {
-      return 0;
-    }
-    // n = 7000;
-    /* Assign HMM parameters */
-    hmm.nstates = n;
-    hmm.nsymbols = S;
+    obs = new OBS(T, obs_seq);
 
     a = new Float32Array(n * n);
     for (i = 0; i < n * n; i++) {
-      a[i] = 1.0 / n;
+      a[i] = 1.0 / <f32>n;
     }
-    hmm.a = a;
 
     b = new Float32Array(n * s);
     for (i = 0; i < n * S; i++) {
-      b[i] = 1.0 / S;
+      b[i] = 1.0 / <f32>S;
     }
-    hmm.b = b;
 
     pi = new Float32Array(n);
     for (i = 0; i < n; i++) {
-      pi[i] = 1.0 / n;
+      pi[i] = 1.0 / <f32>n;
     }
-    hmm.pi = pi;
+
+    hmm = new HMM(n, S, a, b, pi);
 
     /* Run the BWA on the observation sequence */
 
-    log_lik = run_hmm_bwa(hmm, obs, ITERATIONS, 0);
-
-    console.log('Observations\tLog_likelihood\n');
-    console.log(n + '\t');
-    console.log(log_lik + '\n');
+    run_hmm_bwa(hmm, obs, ITERATIONS, 0);
   } else if (v_model == 's') {
     /* Create observation sequence */
-    obs.length = T;
     obs_seq = new Int32Array(T);
     for (i = 0; i < T; i++) {
       obs_seq[i] = 0;
     }
-    obs.data = obs_seq;
+    obs = new OBS(T, obs_seq);
 
-    if (s >= 8000) {
-      return 0;
-    }
-
-    /* Assign HMM parameters */
-    hmm.nstates = N;
-    hmm.nsymbols = s;
     a = new Float32Array(N * N);
     for (i = 0; i < N * N; i++) {
-      a[i] = 1.0 / N;
+      a[i] = 1.0 / <f32>N;
     }
-    hmm.a = a;
+
     b = new Float32Array(N * s);
     for (i = 0; i < N * s; i++) {
-      b[i] = 1.0 / s;
+      b[i] = 1.0 / <f32>s;
     }
-    hmm.b = b;
+
     pi = new Float32Array(N);
     for (i = 0; i < N; i++) {
-      pi[i] = 1.0 / N;
+      pi[i] = 1.0 / <f32>N;
     }
-    hmm.pi = pi;
+
+    hmm = new HMM(N, s, a, b, pi);
 
     /* Run the BWA on the observation sequence */
-    log_lik = run_hmm_bwa(hmm, obs, ITERATIONS, 0);
-
-    console.log('Observations\tLog_likelihood\n');
-    console.log(s + '\t');
-    console.log(log_lik + '\n');
+    run_hmm_bwa(hmm, obs, ITERATIONS, 0);
   } else if (v_model == 't') {
-    if (t >= 10000) {
-      return 0;
-    }
-    /* Create HMM */
-    hmm.nstates = N;
-    hmm.nsymbols = S;
     a = new Float32Array(N * N);
     for (i = 0; i < N * N; i++) {
-      a[i] = 1.0 / N;
+      a[i] = 1.0 / <f32>N;
     }
-    hmm.a = a;
+
     b = new Float32Array(N * S);
     for (i = 0; i < N * S; i++) {
-      b[i] = 1.0 / S;
+      b[i] = 1.0 / <f32>S;
     }
-    hmm.b = b;
+
     pi = new Float32Array(N);
     for (i = 0; i < N; i++) {
-      pi[i] = 1.0 / N;
+      pi[i] = 1.0 / <f32>N;
     }
-    hmm.pi = pi;
+
+    hmm = new HMM(N, S, a, b, pi);
 
     /* Create observation sequence */
-    obs.length = t;
     obs_seq = new Int32Array(t);
     for (i = 0; i < t; i++) {
       obs_seq[i] = 0;
     }
-    obs.data = obs_seq;
+    obs = new OBS(t, obs_seq);
 
     /* Run the BWA on the observation sequence */
-    log_lik = run_hmm_bwa(hmm, obs, ITERATIONS, 0);
-
-    console.log('Observations\tLog_likelihood\n');
-    console.log(t + '\t');
-    console.log(log_lik + '\n');
+    run_hmm_bwa(hmm, obs, ITERATIONS, 0);
   }
-  return {
-    status: 1,
-    options: 'bwa_hmm(' + [v_, n_, s_, t_].join(',') + ')',
-  };
 }

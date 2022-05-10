@@ -407,7 +407,7 @@ function estimate_b(b) {
 
   for (t = 0; t < nstates * nsymbols; ++t) b[t] = 0.0;
 
-  for (t = 0; t < length; t++) {
+  for (t = 0; t < length - 1; t++) {
     /* Calculate denominator */
     sum_ab = dot_product(nstates, alpha, t * nstates, beta, t * nstates);
     acc_b_dev(b, alpha, beta, sum_ab, nstates, nsymbols, obs[t + 1], t);
