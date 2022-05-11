@@ -1,15 +1,15 @@
 {
   "targets": {
     "debug": {
-      "outFile": "build/debug/index.wasm",
-      "textFile": "build/debug/index.wat",
+      "outFile": "build/debug/assemblyscript/index.wasm",
+      "textFile": "build/debug/assemblyscript/index.wat",
       "sourceMap": true,
       "debug": true,
       "exportRuntime": true
     },
     "release": {
-      "outFile": "build/release/index.wasm",
-      "textFile": "build/release/index.wat",
+      "outFile": "build/release/assemblyscript/index.wasm",
+      "textFile": "build/release/assemblyscript/index.wat",
       "sourceMap": true,
       "converge": false,
       "noAssert": false,
