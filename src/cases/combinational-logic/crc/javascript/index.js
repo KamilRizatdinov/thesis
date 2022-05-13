@@ -1,7 +1,3 @@
-/**
- * CRC32 implementation from https://stackoverflow.com/a/18639999/17465982
- */
-
 var makeCRCTable = function () {
   var c;
   var crcTable = [];
@@ -25,5 +21,3 @@ var crc32 = function (str) {
 
   return (crc ^ -1) >>> 0;
 };
-
-console.log(crc32('hello world'));

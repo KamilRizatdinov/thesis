@@ -1,7 +1,3 @@
-/**
- * Needleman-Wunsch from https://gist.github.com/shinout/f19da7720d130f3925ac
- */
-
 const UP: i32 = 1;
 const LEFT: i32 = 2;
 const UL: i32 = 4;

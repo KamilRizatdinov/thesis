@@ -1,28 +1,3 @@
-/*
- * The MIT License (MIT)
- *
- * Copyright (c) 2014, Erick Lavoie, Faiz Khan, Sujay Kathrotia, Vincent
- * Foley-Bourgon, Laurie Hendren
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
 var T: i32 = 1000; /* Number of static observations */
 var S: i32 = 2; /* Number of static symbols */
 var N: i32 = 60; /* Number of static states */
@@ -493,10 +468,6 @@ function estimate_pi(pi: Float32Array): f32 {
   return 0;
 }
 
-// /*******************************************************************************
-//  * BWA function
-//  */
-
 // /* Runs the Baum-Welch Algorithm on the supplied HMM and observation sequence */
 function run_hmm_bwa(
   hmm: HMM,
@@ -533,12 +504,6 @@ function run_hmm_bwa(
   ones_s = new Float32Array(nsymbols);
 
   init_ones_dev(ones_s, nsymbols);
-
-  //   /**
-  //    * a_d => a
-  //    * b_d => b
-  //    * pi_d => pi
-  //    */
 
   /* Run BWA for either max iterations or until threshold is reached */
   for (iter = 0; iter < iterations; iter++) {

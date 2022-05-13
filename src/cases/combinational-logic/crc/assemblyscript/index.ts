@@ -1,7 +1,3 @@
-/**
- * CRC32 implementation from https://stackoverflow.com/a/18639999/17465982
- */
-
 var makeCRCTable = function (): Array<usize> {
   var c: i32;
   var crcTable = [];
