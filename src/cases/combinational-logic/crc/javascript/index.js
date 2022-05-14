@@ -11,7 +11,7 @@ var makeCRCTable = function () {
   return crcTable;
 };
 
-var crc32 = function (str) {
+export function main(str) {
   var crcTable = makeCRCTable();
   var crc = 0 ^ -1;
 
@@ -19,5 +19,5 @@ var crc32 = function (str) {
     crc = (crc >>> 8) ^ crcTable[(crc ^ str.charCodeAt(i)) & 0xff];
   }
 
-  return (crc ^ -1) >>> 0;
-};
+  console.log((crc ^ -1) >>> 0);
+}

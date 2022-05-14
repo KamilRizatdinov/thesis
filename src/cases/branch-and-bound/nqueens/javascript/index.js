@@ -240,7 +240,6 @@ function nqueenJS(size, unique_solutions) {
 
   // get initial set of solutions
   for (i = 2; i < size; i++) {
-    console.log(i);
     solutions += nqueen_solver1(size, i);
   }
 
@@ -263,7 +262,7 @@ function nqueenJS(size, unique_solutions) {
   return solutions;
 }
 
-export function runNQueens(size) {
+export function main(size) {
   var us = {};
   var result = nqueenJS(size, us);
   console.log(result.toString());

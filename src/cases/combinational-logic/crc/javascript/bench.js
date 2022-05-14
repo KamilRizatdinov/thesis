@@ -4,12 +4,14 @@ import {
   peak,
   min,
 } from '../../../../utils/benchmarkWrapper';
-import {runCRC} from './index.js';
+import {main} from './index.js';
 
 const results = await benchmarkWrapper({
   async run() {
-    runCRC(65536, 128, 150);
+    main('crc32 input string');
   },
+  numIterations: 1,
+  numWarmup: 0,
 });
 
 console.log([mean(results), peak(results), min(results)].join());

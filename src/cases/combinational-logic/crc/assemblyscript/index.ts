@@ -11,7 +11,7 @@ var makeCRCTable = function (): Array<usize> {
   return crcTable;
 };
 
-export function crc32(str: string): void {
+export function main(str: string): void {
   var crcTable = makeCRCTable();
   var crc = 0 ^ -1;
 
