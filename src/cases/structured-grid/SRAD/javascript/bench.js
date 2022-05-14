@@ -4,11 +4,11 @@ import {
   peak,
   min,
 } from '../../../../utils/benchmarkWrapper';
-import {runSRAD} from './index.js';
+import {main} from '../build/javascript/index.js';
 
 const results = await benchmarkWrapper({
   async run() {
-    runSRAD(500, 1);
+    main(500, 1);
   },
   numIterations: 1,
   numWarmup: 0,

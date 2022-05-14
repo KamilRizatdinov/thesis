@@ -4,11 +4,11 @@ import {
   peak,
   min,
 } from '../../../../utils/benchmarkWrapper';
-import {runFFT} from './index.js';
+import {main} from '../build/javascript/index.js';
 
 const results = await benchmarkWrapper({
   async run() {
-    runFFT(10);
+    main(10);
   },
   numIterations: 1,
   numWarmup: 0,

@@ -159,7 +159,7 @@ function SRAD(niter, lambda) {
   }
 }
 
-export function runSRAD(niter, lambda) {
+export function main(niter, lambda) {
   var output = 0;
   var image = new Float32Array(Ne);
   for (i = 0; i < Ne; i++) {

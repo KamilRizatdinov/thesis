@@ -31,7 +31,7 @@ function edge(dest, weight) {
   };
 }
 
-export function BFSGraph(no_of_nodes) {
+export function main(no_of_nodes) {
   var inits = InitializeGraph(no_of_nodes);
   var h_graph_nodes = inits.h_graph_nodes;
   var h_graph_mask = inits.h_graph_mask;

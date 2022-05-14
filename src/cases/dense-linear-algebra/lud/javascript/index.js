@@ -74,7 +74,7 @@ function lud(matrix, size) {
   }
 }
 
-export function ludRun(size) {
+export function main(size) {
   var matrix = new Float64Array(size * size);
   randomMatrix(matrix);
   lud(matrix, size);

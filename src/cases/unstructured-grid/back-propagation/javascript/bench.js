@@ -4,11 +4,11 @@ import {
   peak,
   min,
 } from '../../../../utils/benchmarkWrapper';
-import {runBackProp} from './index.js';
+import {main} from '../build/javascript/index.js';
 
 const results = await benchmarkWrapper({
   async run() {
-    runBackProp(2850000);
+    main(2850000);
   },
   numIterations: 1,
   numWarmup: 0,

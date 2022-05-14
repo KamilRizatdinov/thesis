@@ -236,6 +236,6 @@ function kernel_cpu(par, dim, box, rv, qv, fv) {
   }
 }
 
-export function runLavaMD(boxes1d) {
+export function main(boxes1d) {
   return lavamd(boxes1d);
 }

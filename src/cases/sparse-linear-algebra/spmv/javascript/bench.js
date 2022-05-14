@@ -4,12 +4,14 @@ import {
   peak,
   min,
 } from '../../../../utils/benchmarkWrapper';
-import {spmvRun} from './index.js';
+import {main} from '../build/javascript/index.js';
 
 const results = await benchmarkWrapper({
   async run() {
-    spmvRun(50000, 2000, 0.01, 100);
+    main(50000, 2000, 0.01, 100);
   },
+  numIterations: 1,
+  numWarmup: 0,
 });
 
 console.log([mean(results), peak(results), min(results)].join());

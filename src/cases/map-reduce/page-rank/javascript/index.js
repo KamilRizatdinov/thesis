@@ -82,7 +82,7 @@ function reduce_page_rank(page_ranks, maps, n) {
   return dif;
 }
 
-export function runPageRank(n, iter, thresh, divisor) {
+export function main(n, iter, thresh, divisor) {
   var n = n !== undefined ? n : 1000;
   var iter = iter !== undefined ? iter : 1000;
   var thresh = thresh !== undefined ? thresh : 0.00001;
@@ -105,9 +105,4 @@ export function runPageRank(n, iter, thresh, divisor) {
     map_page_rank(pages, page_ranks, maps, noutlinks, n);
     max_diff = reduce_page_rank(page_ranks, maps, n);
   }
-
-  return {
-    status: 1,
-    options: 'runPageRank(' + [n, iter, thresh, divisor].join(',') + ')',
-  };
 }

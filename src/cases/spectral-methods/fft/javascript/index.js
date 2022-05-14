@@ -123,11 +123,7 @@ function printComplexArray(r, i) {
   console.log(a.join('\n'));
 }
 
-function printComplexMatrix(m) {
-  for (var i = 0; i < m.length; ++i) printComplexArray(m[i]['r'], m[i]['i']);
-}
-
-export function runFFT(twoExp) {
+export function main(twoExp) {
   if (twoExp === undefined) {
     twoExp = 10;
   }
@@ -140,8 +136,6 @@ export function runFFT(twoExp) {
   var n = 1 << twoExp;
   var data1D = randomComplexArray(n);
   var data2D = randomComplexMatrix(n);
-
-  console.log('HERE');
 
   var results2D = fft2D(data2D);
   return {status: 1, options: 'runFFT(' + twoExp + ')'};

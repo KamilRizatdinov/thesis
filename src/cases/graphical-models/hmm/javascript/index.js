@@ -100,25 +100,6 @@ function log10(val) {
   return Math.log(val) / Math.LN10;
 }
 
-function printIM(aa, m, n) {
-  var i = 0;
-  var j = 0;
-  for (i = 0; i < m; ++i) {
-    for (j = 0; j < n; ++j) {
-      console.log(aa[i * n + j]);
-    }
-  }
-}
-function printM(aa, m, n) {
-  var i = 0;
-  var j = 0;
-  for (i = 0; i < m; ++i) {
-    for (j = 0; j < n; ++j) {
-      console.log(aa[i * n + j]);
-    }
-  }
-}
-
 /* Calculates the forward variables (alpha) for an HMM and obs. sequence */
 function calc_alpha(a, b, pi) {
   var log_lik;
@@ -502,7 +483,7 @@ function run_hmm_bwa(hmm, in_obs, iterations, threshold) {
 }
 
 /* Time the forward algorithm and vary the number of states */
-export function bwa_hmm(v_, n_, s_, t_) {
+export function main(v_, n_, s_, t_) {
   /* Initialize variables */
   var hmm = {}; /* Initial HMM */
   var obs = {}; /* Observation sequence */
@@ -564,9 +545,9 @@ export function bwa_hmm(v_, n_, s_, t_) {
 
     log_lik = run_hmm_bwa(hmm, obs, ITERATIONS, 0);
 
-    console.log('Observations\tLog_likelihood\n');
-    console.log(n + '\t');
-    console.log(log_lik + '\n');
+    // console.log('Observations\tLog_likelihood\n');
+    // console.log(n + '\t');
+    // console.log(log_lik + '\n');
   } else if (v_model == 's') {
     /* Create observation sequence */
     obs.length = T;
@@ -602,9 +583,9 @@ export function bwa_hmm(v_, n_, s_, t_) {
     /* Run the BWA on the observation sequence */
     log_lik = run_hmm_bwa(hmm, obs, ITERATIONS, 0);
 
-    console.log('Observations\tLog_likelihood\n');
-    console.log(s + '\t');
-    console.log(log_lik + '\n');
+    // console.log('Observations\tLog_likelihood\n');
+    // console.log(s + '\t');
+    // console.log(log_lik + '\n');
   } else if (v_model == 't') {
     if (t >= 10000) {
       return 0;
@@ -639,12 +620,8 @@ export function bwa_hmm(v_, n_, s_, t_) {
     /* Run the BWA on the observation sequence */
     log_lik = run_hmm_bwa(hmm, obs, ITERATIONS, 0);
 
-    console.log('Observations\tLog_likelihood\n');
-    console.log(t + '\t');
-    console.log(log_lik + '\n');
+    // console.log('Observations\tLog_likelihood\n');
+    // console.log(t + '\t');
+    // console.log(log_lik + '\n');
   }
-  return {
-    status: 1,
-    options: 'bwa_hmm(' + [v_, n_, s_, t_].join(',') + ')',
-  };
 }

@@ -2,7 +2,7 @@ const UP = 1;
 const LEFT = 2;
 const UL = 4;
 
-export function nw(s1, s2) {
+export function main(s1, s2) {
   const G = 2;
   const P = 1;
   const M = -1;
@@ -73,6 +73,5 @@ export function nw(s1, s2) {
   const result = chars.map(function (v) {
     return v.reverse().join('');
   });
-  console.log(result);
   return result;
 }

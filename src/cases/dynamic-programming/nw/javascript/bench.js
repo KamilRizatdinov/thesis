@@ -4,15 +4,17 @@ import {
   peak,
   min,
 } from '../../../../utils/benchmarkWrapper';
-import {nw} from './index.js';
+import {main} from '../build/javascript/index.js';
 
 const results = await benchmarkWrapper({
   async run() {
-    nw(
+    main(
       'adfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaffadfasdfsadfdfasdfsdafsdafdfasdffasdfasdfasdfssadfasdfdfasdfasdfasdfsdaff',
       'asdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdfasdfsdfsdafasdfsdfsdfsdfsdfsdfsadgs',
     );
   },
+  numIterations: 1,
+  numWarmup: 0,
 });
 
 console.log([mean(results), peak(results), min(results)].join());

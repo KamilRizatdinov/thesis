@@ -4,7 +4,7 @@ import {
   peak,
   min,
 } from '../../../../utils/benchmarkWrapper';
-import {main} from './index.js';
+import {main} from '../build/javascript/index.js';
 
 const results = await benchmarkWrapper({
   async run() {

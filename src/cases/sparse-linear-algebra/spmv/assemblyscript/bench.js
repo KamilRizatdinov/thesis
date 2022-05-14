@@ -4,23 +4,13 @@ import {
   peak,
   min,
 } from '../../../../utils/benchmarkWrapper';
-
-const ascModule = new WebAssembly.Module(readbuffer(arguments[0]));
+import {main} from '../build/assemblyscript/index.js';
 
 const results = await benchmarkWrapper({
-  async before() {
-    this.instance = new WebAssembly.Instance(ascModule, {
-      env: {
-        abort(msgPtr, fileNamePtr, lineNumber) {
-          console.log(msgPtr, fileNamePtr, lineNumber);
-          throw Error('ARRGGH');
-        },
-      },
-    });
-  },
   async run() {
-    this.instance.exports.main(100);
+    main(50000, 2000, 0.01, 100);
   },
+  numIterations: 1,
   numWarmup: 0,
 });
 
