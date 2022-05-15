@@ -8,7 +8,7 @@ import {main} from '../build/assemblyscript/index.js';
 
 const results = await benchmarkWrapper({
   async run() {
-    main(10);
+    main(8);
   },
   numIterations: 1,
   numWarmup: 0,

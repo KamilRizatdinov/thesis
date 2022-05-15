@@ -256,6 +256,7 @@ function nqueenJS(size, unique_solutions) {
       (1 << i) >> 1,
       u_solutions,
     );
+
     unique_solutions['solutions'] += u_solutions['solutions'];
   }
 

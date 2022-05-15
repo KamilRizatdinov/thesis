@@ -1,18 +1,18 @@
-var bit_mask1 = parseInt('0xaaaaaaaa', 16);
-var bit_mask2 = parseInt('0xcccccccc', 16);
-var bit_mask3 = parseInt('0xf0f0f0f0', 16);
-var bit_mask4 = parseInt('0xff00ff00', 16);
-var bit_mask5 = parseInt('0xffff0000', 16);
+var bit_mask1: i32 = 2863311530;
+var bit_mask2: i32 = 3435973836;
+var bit_mask3: i32 = 4042322160;
+var bit_mask4: i32 = 4278255360;
+var bit_mask5: i32 = 4294901760;
 
 // if (typeof performance === 'undefined') performance = Date;
 
 function bit_scan(x: i32): i32 {
   var res = 0;
-  res |= x & (<i32>bit_mask1) ? 1 : 0;
-  res |= x & (<i32>bit_mask2) ? 2 : 0;
-  res |= x & (<i32>bit_mask3) ? 4 : 0;
-  res |= x & (<i32>bit_mask4) ? 8 : 0;
-  res |= x & (<i32>bit_mask5) ? 16 : 0;
+  res |= x & bit_mask1 ? 1 : 0;
+  res |= x & bit_mask2 ? 2 : 0;
+  res |= x & bit_mask3 ? 4 : 0;
+  res |= x & bit_mask4 ? 8 : 0;
+  res |= x & bit_mask5 ? 16 : 0;
   return res;
 }
 
@@ -81,7 +81,7 @@ function nqueen_solver(
   var board_array = new Int32Array(32);
   var solutions = 0;
   var total_solutions = 0;
-  var i = 0;
+  var i: i32 = 0;
   var j: i32, k: i32;
   var border_mask = 0;
   var index: i32;
@@ -233,6 +233,7 @@ function nqueenJS(size: i32, unique_solutions: Map<string, i32>): i32 {
       (1 << i) >> 1,
       u_solutions,
     );
+
     unique_solutions.set(
       'solutions',
       unique_solutions.get('solutions') + u_solutions.get('solutions'),
