@@ -73,5 +73,7 @@ export function main(s1, s2) {
   const result = chars.map(function (v) {
     return v.reverse().join('');
   });
+
+  console.log(result.join('\n\n'));
   return result;
 }

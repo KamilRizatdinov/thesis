@@ -83,10 +83,6 @@ function reduce_page_rank(page_ranks, maps, n) {
 }
 
 export function main(n, iter, thresh, divisor) {
-  var n = n !== undefined ? n : 1000;
-  var iter = iter !== undefined ? iter : 1000;
-  var thresh = thresh !== undefined ? thresh : 0.00001;
-  var divisor = divisor !== undefined ? divisor : 2;
   var pages;
   var maps;
   var page_ranks;
@@ -105,4 +101,6 @@ export function main(n, iter, thresh, divisor) {
     map_page_rank(pages, page_ranks, maps, noutlinks, n);
     max_diff = reduce_page_rank(page_ranks, maps, n);
   }
+
+  console.log(max_diff.toString());
 }

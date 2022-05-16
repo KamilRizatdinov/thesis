@@ -547,7 +547,6 @@ export function main(v_, n_, s_, t_) {
 
     // console.log('Observations\tLog_likelihood\n');
     // console.log(n + '\t');
-    // console.log(log_lik + '\n');
   } else if (v_model == 's') {
     /* Create observation sequence */
     obs.length = T;
@@ -621,7 +620,7 @@ export function main(v_, n_, s_, t_) {
     log_lik = run_hmm_bwa(hmm, obs, ITERATIONS, 0);
 
     // console.log('Observations\tLog_likelihood\n');
-    // console.log(t + '\t');
+    // console.log(s + '\t');
     // console.log(log_lik + '\n');
   }
 }

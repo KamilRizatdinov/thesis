@@ -19,5 +19,5 @@ export function main(str) {
     crc = (crc >>> 8) ^ crcTable[(crc ^ str.charCodeAt(i)) & 0xff];
   }
 
-  console.log((crc ^ -1) >>> 0);
+  console.log(crc);
 }

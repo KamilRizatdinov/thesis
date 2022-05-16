@@ -1,20 +1,19 @@
-Math.commonRandom = (function () {
-  var seed = 49734321;
-  return function () {
-    // Robert Jenkins' 32 bit integer hash function.
-    seed = (seed + 0x7ed55d16 + (seed << 12)) & 0xffffffff;
-    seed = (seed ^ 0xc761c23c ^ (seed >>> 19)) & 0xffffffff;
-    seed = (seed + 0x165667b1 + (seed << 5)) & 0xffffffff;
-    seed = ((seed + 0xd3a2646c) ^ (seed << 9)) & 0xffffffff;
-    seed = (seed + 0xfd7046c5 + (seed << 3)) & 0xffffffff;
-    seed = (seed ^ 0xb55a4f09 ^ (seed >>> 16)) & 0xffffffff;
-    return seed;
-  };
-})();
+var seed = 49734321;
 
-Math.commonRandomJS = function () {
-  return Math.abs(Math.commonRandom() / 0x7fffffff);
-};
+function commonRandom() {
+  // Robert Jenkins' 32 bit integer hash function.
+  seed = (seed + 0x7ed55d16 + (seed << 12)) & 0xffffffff;
+  seed = (seed ^ 0xc761c23c ^ (seed >>> 19)) & 0xffffffff;
+  seed = (seed + 0x165667b1 + (seed << 5)) & 0xffffffff;
+  seed = ((seed + 0xd3a2646c) ^ (seed << 9)) & 0xffffffff;
+  seed = (seed + 0xfd7046c5 + (seed << 3)) & 0xffffffff;
+  seed = (seed ^ 0xb55a4f09 ^ (seed >>> 16)) & 0xffffffff;
+  return seed;
+}
+
+function commonRandomJS() {
+  return Math.abs(commonRandom() / 0x7fffffff);
+}
 
 function randomMatrix(matrix) {
   var size = Math.sqrt(matrix.length);
@@ -24,7 +23,7 @@ function randomMatrix(matrix) {
   for (var i = 0; i < size; ++i) {
     for (var j = 0; j < size; ++j) {
       if (i > j) {
-        l[i * size + j] = Math.commonRandomJS();
+        l[i * size + j] = commonRandomJS();
       } else if (i == j) {
         l[i * size + j] = 1;
       } else {
@@ -37,7 +36,7 @@ function randomMatrix(matrix) {
       if (i > j) {
         u[j * size + i] = 0;
       } else {
-        u[j * size + i] = Math.commonRandomJS();
+        u[j * size + i] = commonRandomJS();
       }
     }
   }
@@ -74,8 +73,20 @@ function lud(matrix, size) {
   }
 }
 
+function printMatrix(matrix) {
+  var size = Math.sqrt(matrix.length);
+  for (var i = 0; i < size; ++i) {
+    var row = [];
+    for (var j = 0; j < size; ++j) {
+      row.push(matrix[i * size + j]);
+    }
+    console.log(row.join(' '));
+  }
+}
+
 export function main(size) {
   var matrix = new Float64Array(size * size);
   randomMatrix(matrix);
   lud(matrix, size);
+  // printMatrix(matrix);
 }

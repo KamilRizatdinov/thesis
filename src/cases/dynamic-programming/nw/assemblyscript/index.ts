@@ -104,5 +104,6 @@ export function main(s1: string, s2: string): string[] {
     return v.reverse().join('');
   });
 
+  console.log(result.join('\n\n'));
   return result;
 }

@@ -73,11 +73,6 @@ export function main(no_of_nodes) {
     }
     ++k;
   } while (stop);
-
-  return {
-    status: 1,
-    options: 'BFSGraph(' + no_of_nodes + ')',
-  };
 }
 
 function InitializeGraph(no_of_nodes) {

@@ -1,7 +1,9 @@
-var makeCRCTable = function (): Array<usize> {
+var makeCRCTable = function (): Int32Array {
   var c: i32;
-  var crcTable = [];
-  for (var n = 0; n < 256; n++) {
+  var n: i32;
+  var crcTable = new Int32Array(256);
+
+  for (n = 0; n < 256; n++) {
     c = n;
     for (var k = 0; k < 8; k++) {
       c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
@@ -16,8 +18,8 @@ export function main(str: string): void {
   var crc = 0 ^ -1;
 
   for (var i = 0; i < str.length; i++) {
-    crc = (crc >>> 8) ^ (<i32>crcTable[(crc ^ str.charCodeAt(i)) & 0xff]);
+    crc = (crc >>> 8) ^ crcTable[(crc ^ str.charCodeAt(i)) & 0xff];
   }
 
-  console.log(((crc ^ -1) >>> 0).toString());
+  console.log(crc.toString());
 }

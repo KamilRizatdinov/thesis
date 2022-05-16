@@ -1,19 +1,17 @@
 var d_factor: f64 = 0.85; //damping factor
 
-var seed: i32 = 49734321;
+let seed: i32 = 49734321;
 
-var commonRandom = (function (): () => i32 {
-  return function (): i32 {
-    // Robert Jenkins' 32 bit integer hash function.
-    seed = (seed + 0x7ed55d16 + (seed << 12)) & 0xffffffff;
-    seed = (seed ^ 0xc761c23c ^ (seed >>> 19)) & 0xffffffff;
-    seed = (seed + 0x165667b1 + (seed << 5)) & 0xffffffff;
-    seed = ((seed + 0xd3a2646c) ^ (seed << 9)) & 0xffffffff;
-    seed = (seed + 0xfd7046c5 + (seed << 3)) & 0xffffffff;
-    seed = (seed ^ 0xb55a4f09 ^ (seed >>> 16)) & 0xffffffff;
-    return seed;
-  };
-})();
+function commonRandom(): i32 {
+  // Robert Jenkins' 32 bit integer hash function.
+  seed = (seed + 0x7ed55d16 + (seed << 12)) & 0xffffffff;
+  seed = (seed ^ 0xc761c23c ^ (seed >>> 19)) & 0xffffffff;
+  seed = (seed + 0x165667b1 + (seed << 5)) & 0xffffffff;
+  seed = ((seed + 0xd3a2646c) ^ (seed << 9)) & 0xffffffff;
+  seed = (seed + 0xfd7046c5 + (seed << 3)) & 0xffffffff;
+  seed = (seed ^ 0xb55a4f09 ^ (seed >>> 16)) & 0xffffffff;
+  return seed;
+}
 
 // generates an array of random pages and their links
 function random_pages(n: i32, noutlinks: Int32Array, divisor: i32): Int32Array {
@@ -94,12 +92,7 @@ function reduce_page_rank(
   return dif;
 }
 
-export function main(
-  n: i32 = 1000,
-  iter: i32 = 1000,
-  thresh: f64 = 0.00001,
-  divisor: i32 = 2,
-): void {
+export function main(n: i32, iter: i32, thresh: f64, divisor: i32): void {
   var pages: Int32Array;
   var page_ranks: Float64Array;
   var maps: Float64Array;
@@ -118,4 +111,6 @@ export function main(
     map_page_rank(pages, page_ranks, maps, noutlinks, n);
     max_diff = reduce_page_rank(page_ranks, maps, n);
   }
+
+  console.log(max_diff.toString());
 }

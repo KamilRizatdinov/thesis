@@ -623,7 +623,7 @@ export function main(v_: string, n_: i32, s_: i32, t_: i32): void {
 
     /* Run the BWA on the observation sequence */
 
-    run_hmm_bwa(hmm, obs, ITERATIONS, 0);
+    var log_lik = run_hmm_bwa(hmm, obs, ITERATIONS, 0);
   } else if (v_model == 's') {
     /* Create observation sequence */
     obs_seq = new Int32Array(T);

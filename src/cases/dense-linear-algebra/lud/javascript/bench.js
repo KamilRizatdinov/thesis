@@ -8,7 +8,7 @@ import {main} from '../build/javascript/index.js';
 
 const results = await benchmarkWrapper({
   async run() {
-    main(350);
+    main(300);
   },
   numIterations: 1,
   numWarmup: 0,

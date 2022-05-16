@@ -3,24 +3,29 @@ var MAX_INIT_EDGES = 4;
 var MIN_WEIGHT = 1;
 var MAX_WEIGHT = 1;
 
-var seed = 49734321;
+let seed = 49734321;
 
-var commonRandom = (function (): () => i32 {
-  return function (): i32 {
-    // Robert Jenkins' 32 bit integer hash function.
-    seed = (seed + 0x7ed55d16 + (seed << 12)) & 0xffffffff;
-    seed = (seed ^ 0xc761c23c ^ (seed >>> 19)) & 0xffffffff;
-    seed = (seed + 0x165667b1 + (seed << 5)) & 0xffffffff;
-    seed = ((seed + 0xd3a2646c) ^ (seed << 9)) & 0xffffffff;
-    seed = (seed + 0xfd7046c5 + (seed << 3)) & 0xffffffff;
-    seed = (seed ^ 0xb55a4f09 ^ (seed >>> 16)) & 0xffffffff;
-    return seed;
-  };
-})();
+function commonRandom(): i32 {
+  // Robert Jenkins' 32 bit integer hash function.
+  seed = (seed + 0x7ed55d16 + (seed << 12)) & 0xffffffff;
+  seed = (seed ^ 0xc761c23c ^ (seed >>> 19)) & 0xffffffff;
+  seed = (seed + 0x165667b1 + (seed << 5)) & 0xffffffff;
+  seed = ((seed + 0xd3a2646c) ^ (seed << 9)) & 0xffffffff;
+  seed = (seed + 0xfd7046c5 + (seed << 3)) & 0xffffffff;
+  seed = (seed ^ 0xb55a4f09 ^ (seed >>> 16)) & 0xffffffff;
+  return seed;
+}
 
 class Node {
   starting: i32;
   no_of_edges: i32;
+  constructor(starting: i32, no_of_edges: i32) {
+    this.starting = starting;
+    this.no_of_edges = no_of_edges;
+  }
+  toString(): string {
+    return `starting: ${this.starting}, no_of_edges: ${this.no_of_edges}`;
+  }
 }
 
 class Edge {
@@ -35,13 +40,6 @@ class Graph {
   h_graph_visited: Array<bool>;
   h_cost: Array<i32>;
   h_graph_edges: Array<i32>;
-}
-
-function node(starting: i32, no_of_edges: i32): Node {
-  return {
-    starting: starting,
-    no_of_edges: no_of_edges,
-  };
 }
 
 function edge(dest: i32, weight: i32): Edge {
@@ -133,7 +131,7 @@ function InitializeGraph(no_of_nodes: i32): Graph {
   var total_edges = 0;
   for (i = 0; i < no_of_nodes; ++i) {
     no_of_edges = graph[i].length;
-    h_graph_nodes[i] = node(total_edges, no_of_edges);
+    h_graph_nodes[i] = new Node(total_edges, no_of_edges);
     h_graph_mask[i] = false;
     h_updating_graph_mask[i] = false;
     h_graph_visited[i] = false;
@@ -155,7 +153,7 @@ function InitializeGraph(no_of_nodes: i32): Graph {
   }
 
   for (i = 0; i < no_of_nodes; ++i) {
-    h_cost[i] = -1;
+    h_cost[i] = i32.MAX_VALUE;
   }
   h_cost[source] = 0;
 

@@ -22,20 +22,18 @@ class ParCPU {
   alpha: f64;
 }
 
-var seed: i32 = 49734321;
+let seed: i32 = 49734321;
 
-var commonRandom = (function (): () => i32 {
-  return function (): i32 {
-    // Robert Jenkins' 32 bit integer hash function.
-    seed = (seed + 0x7ed55d16 + (seed << 12)) & 0xffffffff;
-    seed = (seed ^ 0xc761c23c ^ (seed >>> 19)) & 0xffffffff;
-    seed = (seed + 0x165667b1 + (seed << 5)) & 0xffffffff;
-    seed = ((seed + 0xd3a2646c) ^ (seed << 9)) & 0xffffffff;
-    seed = (seed + 0xfd7046c5 + (seed << 3)) & 0xffffffff;
-    seed = (seed ^ 0xb55a4f09 ^ (seed >>> 16)) & 0xffffffff;
-    return seed;
-  };
-})();
+function commonRandom(): i32 {
+  // Robert Jenkins' 32 bit integer hash function.
+  seed = (seed + 0x7ed55d16 + (seed << 12)) & 0xffffffff;
+  seed = (seed ^ 0xc761c23c ^ (seed >>> 19)) & 0xffffffff;
+  seed = (seed + 0x165667b1 + (seed << 5)) & 0xffffffff;
+  seed = ((seed + 0xd3a2646c) ^ (seed << 9)) & 0xffffffff;
+  seed = (seed + 0xfd7046c5 + (seed << 3)) & 0xffffffff;
+  seed = (seed ^ 0xb55a4f09 ^ (seed >>> 16)) & 0xffffffff;
+  return seed;
+}
 
 function DOT(A: Box, B: Box): f64 {
   return A.x * B.x + A.y * B.y + A.z * B.z;
@@ -206,13 +204,43 @@ function lavamd(boxes1d: i32): void {
   // input (charge)
   qv_cpu = new Float64Array(dim_cpu.space_elem); // (fp*)malloc(dim_cpu.space_mem2);
   for (i = 0; i < dim_cpu.space_elem; i = i + 1) {
-    qv_cpu[i] = ((commonRandom() % 10) + 1) / 10; // get a number in the range 0.1 - 1.0
+    qv_cpu[i] = <f64>((commonRandom() % 10) + 1) / 10; // get a number in the range 0.1 - 1.0
   }
 
   // output (forces)
   fv_cpu = createArray(space_mem, dim_cpu.space_elem); //(FOUR_VECTOR*)malloc(dim_cpu.space_mem);
 
   kernel_cpu(par_cpu, dim_cpu, box_cpu, rv_cpu, qv_cpu, fv_cpu);
+
+  // console.log(`par_cpu: [${par_cpu.alpha.toString()}]`);
+  // console.log(
+  //   `dim_cpu: [${dim_cpu.boxes1d_arg.toString()}, ${dim_cpu.cores_arg.toString()}, ${dim_cpu.number_boxes.toString()}, ${dim_cpu.space_elem.toString()}]`,
+  // );
+  // console.log(
+  //   box_cpu
+  //     .map<string>(
+  //       box =>
+  //         `${box.nn.toString()}, ${box.number.toString()} ${box.offset.toString()} ${box.v.toString()} ${box.x.toString()} ${box.y.toString()} ${box.z.toString()}`,
+  //     )
+  //     .join('\n'),
+  // );
+  // console.log(
+  //   rv_cpu
+  //     .map<string>(
+  //       box =>
+  //         `${box.nn.toString()}, ${box.number.toString()} ${box.offset.toString()} ${box.v.toString()} ${box.x.toString()} ${box.y.toString()} ${box.z.toString()}`,
+  //     )
+  //     .join('\n'),
+  // );
+  // console.log(
+  //   fv_cpu
+  //     .map<string>(
+  //       box =>
+  //         `${box.nn.toString()}, ${box.number.toString()} ${box.offset.toString()} ${box.v.toString()} ${box.x.toString()} ${box.y.toString()} ${box.z.toString()}`,
+  //     )
+  //     .join('\n'),
+  // );
+  // console.log(qv_cpu.join(' '));
 
   var sum = space_mem();
 }
@@ -297,5 +325,5 @@ function kernel_cpu(
 }
 
 export function main(boxes1d: i32): void {
-  return lavamd(boxes1d);
+  lavamd(boxes1d);
 }

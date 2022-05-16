@@ -36,20 +36,22 @@ function nei_str() {
     x: 0,
     y: 0,
     z: 0,
+    v: 0,
     number: 0,
     offset: 0,
+    nn: 0,
+    nei: new Array(),
   };
 }
 
 function box_str() {
-  // home box
   return {
     x: 0,
     y: 0,
     z: 0,
+    v: 0,
     number: 0,
     offset: 0,
-    // neighbor boxes
     nn: 0,
     nei: createArray(nei_str, 26),
   };
@@ -61,6 +63,10 @@ function space_mem() {
     x: 0,
     y: 0,
     z: 0,
+    number: 0,
+    offset: 0,
+    nn: 0,
+    nei: new Array(),
   };
 }
 
@@ -178,6 +184,36 @@ function lavamd(boxes1d) {
 
   kernel_cpu(par_cpu, dim_cpu, box_cpu, rv_cpu, qv_cpu, fv_cpu);
 
+  // console.log(`par_cpu: [${par_cpu.alpha.toString()}]`);
+  // console.log(
+  //   `dim_cpu: [${dim_cpu.boxes1d_arg.toString()}, ${dim_cpu.cores_arg.toString()}, ${dim_cpu.number_boxes.toString()}, ${dim_cpu.space_elem.toString()}]`,
+  // );
+  // console.log(
+  //   box_cpu
+  //     .map(
+  //       box =>
+  //         `${box.nn.toString()}, ${box.number.toString()} ${box.offset.toString()} ${box.v.toString()} ${box.x.toString()} ${box.y.toString()} ${box.z.toString()}`,
+  //     )
+  //     .join('\n'),
+  // );
+  // console.log(
+  //   rv_cpu
+  //     .map(
+  //       box =>
+  //         `${box.nn.toString()}, ${box.number.toString()} ${box.offset.toString()} ${box.v.toString()} ${box.x.toString()} ${box.y.toString()} ${box.z.toString()}`,
+  //     )
+  //     .join('\n'),
+  // );
+  // console.log(
+  //   fv_cpu
+  //     .map(
+  //       box =>
+  //         `${box.nn.toString()}, ${box.number.toString()} ${box.offset.toString()} ${box.v.toString()} ${box.x.toString()} ${box.y.toString()} ${box.z.toString()}`,
+  //     )
+  //     .join('\n'),
+  // );
+  // console.log(qv_cpu.join(' '));
+
   var sum = space_mem();
 }
 
@@ -237,5 +273,5 @@ function kernel_cpu(par, dim, box, rv, qv, fv) {
 }
 
 export function main(boxes1d) {
-  return lavamd(boxes1d);
+  lavamd(boxes1d);
 }

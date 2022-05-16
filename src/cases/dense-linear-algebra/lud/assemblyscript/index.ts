@@ -1,21 +1,20 @@
-var seed = 49734321;
+let seed = 49734321;
 
-var commonRandom = (function (): () => i32 {
-  return function (): i32 {
-    // Robert Jenkins' 32 bit integer hash function.
-    seed = (seed + 0x7ed55d16 + (seed << 12)) & 0xffffffff;
-    seed = (seed ^ 0xc761c23c ^ (seed >>> 19)) & 0xffffffff;
-    seed = (seed + 0x165667b1 + (seed << 5)) & 0xffffffff;
-    seed = ((seed + 0xd3a2646c) ^ (seed << 9)) & 0xffffffff;
-    seed = (seed + 0xfd7046c5 + (seed << 3)) & 0xffffffff;
-    seed = (seed ^ 0xb55a4f09 ^ (seed >>> 16)) & 0xffffffff;
-    return seed;
-  };
-})();
+function commonRandom(): i32 {
+  // Robert Jenkins' 32 bit integer hash function.
+  seed = (seed + 0x7ed55d16 + (seed << 12)) & 0xffffffff;
+  seed = (seed ^ 0xc761c23c ^ (seed >>> 19)) & 0xffffffff;
+  seed = (seed + 0x165667b1 + (seed << 5)) & 0xffffffff;
+  seed = ((seed + 0xd3a2646c) ^ (seed << 9)) & 0xffffffff;
+  seed = (seed + 0xfd7046c5 + (seed << 3)) & 0xffffffff;
+  seed = (seed ^ 0xb55a4f09 ^ (seed >>> 16)) & 0xffffffff;
+  return seed;
+}
 
-var commonRandomJS = function (): f64 {
-  return Math.abs(commonRandom() / 0x7fffffff);
-};
+function commonRandomJS(): f64 {
+  const commonRand = <f64>commonRandom();
+  return Math.abs(commonRand / 0x7fffffff);
+}
 
 function randomMatrix(matrix: Float64Array): void {
   var size = <i32>Math.sqrt(matrix.length);
@@ -80,8 +79,23 @@ function lud(matrix: Float64Array, size: i32): void {
   }
 }
 
+function printMatrix(matrix: Float64Array): void {
+  var size = <i32>Math.sqrt(matrix.length);
+  var i: i32;
+  var j: i32;
+
+  for (i = 0; i < size; ++i) {
+    var row = new Float64Array(size);
+    for (j = 0; j < size; ++j) {
+      row[j] = matrix[i * size + j];
+    }
+    console.log(row.join(' '));
+  }
+}
+
 export function main(size: i32): void {
   var matrix = new Float64Array(size * size);
   randomMatrix(matrix);
   lud(matrix, size);
+  // printMatrix(matrix);
 }
