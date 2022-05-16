@@ -120,7 +120,6 @@ function printComplexArray(r, i) {
   var a = [];
   for (var j = 0; j < r.length; ++j)
     a[j] = r[j].toFixed(6) + ' + ' + i[j].toFixed(6) + 'i';
-  console.log(a.join('\n'));
 }
 
 export function main(twoExp) {
@@ -138,5 +137,4 @@ export function main(twoExp) {
   var data2D = randomComplexMatrix(n);
 
   var results2D = fft2D(data2D);
-  return {status: 1, options: 'runFFT(' + twoExp + ')'};
 }
