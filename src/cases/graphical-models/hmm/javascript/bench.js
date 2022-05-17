@@ -10,8 +10,6 @@ const results = await benchmarkWrapper({
   async run() {
     main('n', 500);
   },
-  numIterations: 1,
-  numWarmup: 0,
 });
 
 console.log([mean(results), peak(results), min(results)].join());

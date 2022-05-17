@@ -172,8 +172,5 @@ export function main(niter, lambda) {
     output = output + data[i];
   }
 
-  return {
-    status: 1,
-    options: 'runSRAD(' + [niter, lambda].join(',') + ')',
-  };
+  // console.log(output);
 }

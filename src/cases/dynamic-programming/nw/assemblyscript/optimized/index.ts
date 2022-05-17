@@ -2,7 +2,7 @@ const UP: i32 = 1;
 const LEFT: i32 = 2;
 const UL: i32 = 4;
 
-export function main(s1: string, s2: string): string[] {
+export function main(s1: string, s2: string): void {
   const G: i32 = 2;
   const P: i32 = 1;
   const M: i32 = -1;
@@ -109,5 +109,4 @@ export function main(s1: string, s2: string): string[] {
   });
 
   // console.log(result.join('\n\n'));
-  return result;
 }

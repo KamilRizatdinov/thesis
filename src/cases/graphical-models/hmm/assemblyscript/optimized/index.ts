@@ -670,6 +670,7 @@ export function main(v_: string, n_: i32, s_: i32, t_: i32): void {
     /* Run the BWA on the observation sequence */
 
     var log_lik = run_hmm_bwa(hmm, obs, ITERATIONS, 0);
+    // console.log(log_lik.toString());
   } else if (v_model == 's') {
     /* Create observation sequence */
     obs_seq = new StaticArray<i32>(T);
@@ -696,7 +697,7 @@ export function main(v_: string, n_: i32, s_: i32, t_: i32): void {
     hmm = new HMM(N, s, a, b, pi);
 
     /* Run the BWA on the observation sequence */
-    run_hmm_bwa(hmm, obs, ITERATIONS, 0);
+    log_lik = run_hmm_bwa(hmm, obs, ITERATIONS, 0);
   } else if (v_model == 't') {
     a = new StaticArray<f32>(N * N);
     for (i = 0; i < N * N; i++) {
@@ -723,6 +724,6 @@ export function main(v_: string, n_: i32, s_: i32, t_: i32): void {
     obs = new OBS(t, obs_seq);
 
     /* Run the BWA on the observation sequence */
-    run_hmm_bwa(hmm, obs, ITERATIONS, 0);
+    log_lik = run_hmm_bwa(hmm, obs, ITERATIONS, 0);
   }
 }

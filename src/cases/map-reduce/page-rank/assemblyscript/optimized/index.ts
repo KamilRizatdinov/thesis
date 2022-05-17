@@ -104,7 +104,7 @@ export function main(n: i32, iter: i32, thresh: f64, divisor: i32): void {
   var maps: StaticArray<f64>;
   var noutlinks: StaticArray<i32>;
   var t: i32;
-  var max_diff = Infinity;
+  var max_diff: f64 = f64.MAX_VALUE;
 
   page_ranks = new StaticArray<f64>(n);
   maps = new StaticArray<f64>(n * n);

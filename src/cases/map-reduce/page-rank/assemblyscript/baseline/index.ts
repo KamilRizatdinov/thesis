@@ -98,7 +98,7 @@ export function main(n: i32, iter: i32, thresh: f64, divisor: i32): void {
   var maps: Float64Array;
   var noutlinks: Int32Array;
   var t: i32;
-  var max_diff = Infinity;
+  var max_diff: f64 = f64.MAX_VALUE;
 
   page_ranks = new Float64Array(n);
   maps = new Float64Array(n * n);

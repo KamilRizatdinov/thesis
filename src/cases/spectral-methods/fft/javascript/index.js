@@ -137,4 +137,7 @@ export function main(twoExp) {
   var data2D = randomComplexMatrix(n);
 
   var results2D = fft2D(data2D);
+
+  // console.log(results2D[0].i.join(' '));
+  // console.log(results2D[0].r.join(' '));
 }

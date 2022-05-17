@@ -49,54 +49,6 @@ function edge(dest: i32, weight: i32): Edge {
   };
 }
 
-export function main(no_of_nodes: i32): void {
-  var inits = InitializeGraph(no_of_nodes);
-  var h_graph_nodes = inits.h_graph_nodes;
-  var h_graph_mask = inits.h_graph_mask;
-  var h_updating_graph_mask = inits.h_updating_graph_mask;
-  var h_graph_visited = inits.h_graph_visited;
-  var h_cost = inits.h_cost;
-  var h_graph_edges = inits.h_graph_edges;
-
-  var k = 0;
-  var stop: bool;
-  var tid: i32;
-  var i: i32;
-
-  do {
-    stop = false;
-
-    for (tid = 0; tid < no_of_nodes; ++tid) {
-      if (unchecked(h_graph_mask[tid])) {
-        unchecked((h_graph_mask[tid] = false));
-        for (
-          i = unchecked(h_graph_nodes[tid]).starting;
-          i <
-          unchecked(h_graph_nodes[tid]).no_of_edges +
-            unchecked(h_graph_nodes[tid]).starting;
-          ++i
-        ) {
-          var id = unchecked(h_graph_edges[i]);
-          if (!h_graph_visited[id]) {
-            unchecked((h_cost[id] = h_cost[tid] + 1));
-            unchecked((h_updating_graph_mask[id] = true));
-          }
-        }
-      }
-    }
-
-    for (tid = 0; tid < no_of_nodes; ++tid) {
-      if (unchecked(h_updating_graph_mask[tid])) {
-        unchecked((h_graph_mask[tid] = true));
-        unchecked((h_graph_visited[tid] = true));
-        stop = true;
-        unchecked((h_updating_graph_mask[tid] = false));
-      }
-    }
-    ++k;
-  } while (stop);
-}
-
 function InitializeGraph(no_of_nodes: i32): Graph {
   var h_graph_nodes = new StaticArray<Node>(no_of_nodes);
   var h_graph_mask = new StaticArray<bool>(no_of_nodes);
@@ -159,6 +111,12 @@ function InitializeGraph(no_of_nodes: i32): Graph {
   }
   unchecked((h_cost[source] = 0));
 
+  // console.log(h_graph_mask.join(' '));
+  // console.log(h_updating_graph_mask.join(' '));
+  // console.log(h_graph_visited.join(' '));
+  // console.log(h_cost.join(' '));
+  // console.log(h_graph_edges.join(' '));
+
   return {
     h_graph_nodes: h_graph_nodes,
     h_graph_mask: h_graph_mask,
@@ -167,4 +125,54 @@ function InitializeGraph(no_of_nodes: i32): Graph {
     h_cost: h_cost,
     h_graph_edges: h_graph_edges,
   };
+}
+
+export function main(no_of_nodes: i32): void {
+  var inits = InitializeGraph(no_of_nodes);
+  var h_graph_nodes = inits.h_graph_nodes;
+  var h_graph_mask = inits.h_graph_mask;
+  var h_updating_graph_mask = inits.h_updating_graph_mask;
+  var h_graph_visited = inits.h_graph_visited;
+  var h_cost = inits.h_cost;
+  var h_graph_edges = inits.h_graph_edges;
+
+  var k = 0;
+  var stop: bool;
+  var tid: i32;
+  var i: i32;
+
+  do {
+    stop = false;
+
+    for (tid = 0; tid < no_of_nodes; ++tid) {
+      if (unchecked(h_graph_mask[tid])) {
+        unchecked((h_graph_mask[tid] = false));
+        for (
+          i = unchecked(h_graph_nodes[tid]).starting;
+          i <
+          unchecked(h_graph_nodes[tid]).no_of_edges +
+            unchecked(h_graph_nodes[tid]).starting;
+          ++i
+        ) {
+          var id = unchecked(h_graph_edges[i]);
+          if (!h_graph_visited[id]) {
+            unchecked((h_cost[id] = h_cost[tid] + 1));
+            unchecked((h_updating_graph_mask[id] = true));
+          }
+        }
+      }
+    }
+
+    for (tid = 0; tid < no_of_nodes; ++tid) {
+      if (unchecked(h_updating_graph_mask[tid])) {
+        unchecked((h_graph_mask[tid] = true));
+        unchecked((h_graph_visited[tid] = true));
+        stop = true;
+        unchecked((h_updating_graph_mask[tid] = false));
+      }
+    }
+    ++k;
+  } while (stop);
+
+  // console.log(h_cost.join(' '));
 }

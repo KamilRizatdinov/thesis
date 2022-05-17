@@ -75,5 +75,4 @@ export function main(s1, s2) {
   });
 
   // console.log(result.join('\n\n'));
-  return result;
 }

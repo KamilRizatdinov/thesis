@@ -241,5 +241,6 @@ function nqueenJS(size, unique_solutions) {
 export function main(size) {
   var us = {};
   var result = nqueenJS(size, us);
+
   // console.log(result);
 }

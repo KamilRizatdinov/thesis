@@ -169,4 +169,6 @@ export function main(niter: i32, lambda: f32): void {
   for (i = 0; i < Nr; i++) {
     output = output + data[i];
   }
+
+  // console.log(output.toString());
 }

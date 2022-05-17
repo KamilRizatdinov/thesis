@@ -20,5 +20,6 @@ export function main(str: string): void {
   for (var i = 0; i < str.length; i++) {
     crc = (crc >>> 8) ^ crcTable[(crc ^ str.charCodeAt(i)) & 0xff];
   }
+
   // console.log(crc.toString());
 }

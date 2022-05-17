@@ -246,5 +246,6 @@ function nqueenJS(size: i32, unique_solutions: Map<string, i32>): i32 {
 export function main(size: i32): void {
   var us = new Map<string, i32>();
   var result: i32 = nqueenJS(size, us);
+
   // console.log(result.toString());
 }
