@@ -177,8 +177,8 @@ function generateRandomCSR(dim, density, stddev) {
 
   update_interval = Math.round(m.num_rows / 10.0);
   for (i = 0; i < m.num_rows; ++i) {
-    if (i % update_interval == 0)
-      console.log(i + ' rows of ' + m.num_rows + ' generated. Continuing...');
+    // if (i % update_interval == 0)
+    //   console.log(i + ' rows of ' + m.num_rows + ' generated. Continuing...');
 
     nnz_ith_row_double = randNorm();
     nnz_ith_row_double *= m.stdev;
@@ -216,19 +216,19 @@ function generateRandomCSR(dim, density, stddev) {
   }
 
   nz_error = Math.abs(m.num_nonzeros - m.Arow[m.num_rows]) / m.num_nonzeros;
-  if (nz_error >= 0.5)
-    console.log(
-      'WARNING: Actual NNZ differs from Theoretical NNZ by' +
-        nz_error * 100 +
-        '%\n',
-    );
+  // if (nz_error >= 0.5)
+  //   console.log(
+  //     'WARNING: Actual NNZ differs from Theoretical NNZ by' +
+  //       nz_error * 100 +
+  //       '%\n',
+  //   );
 
   m.num_nonzeros = m.Arow[m.num_rows];
-  console.log('Actual NUM_nonzeros: ' + m.num_nonzeros + '\n');
+  // console.log('Actual NUM_nonzeros: ' + m.num_nonzeros + '\n');
 
   m.density_perc = (m.num_nonzeros * 100.0) / (m.num_cols * m.num_rows);
   m.density_ppm = Math.round(m.density_perc * 10000.0);
-  console.log('Actual Density: ' + m.density_perc + '% ppm: ' + m.density_ppm);
+  // console.log('Actual Density: ' + m.density_perc + '% ppm: ' + m.density_ppm);
 
   m.Ax = new Float32Array(m.num_nonzeros);
   for (i = 0; i < m.num_nonzeros; ++i) {
@@ -255,7 +255,7 @@ function spmv_csr(matrix, dim, rowv, colv, v, y, out) {
   }
 }
 
-export function spmvRun(dim, density, stddev, iterations) {
+export function main(dim, density, stddev, iterations) {
   var m = generateRandomCSR(dim, density, stddev);
   var v = new Float32Array(dim);
   var y = new Float32Array(dim);

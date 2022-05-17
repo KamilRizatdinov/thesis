@@ -8,10 +8,8 @@ import {main} from '../build/assemblyscript/index.js';
 
 const results = await benchmarkWrapper({
   async run() {
-    main(50000, 2000, 0.01, 100);
+    main(5000, 2000, 0.01, 10);
   },
-  numIterations: 1,
-  numWarmup: 0,
 });
 
 console.log([mean(results), peak(results), min(results)].join());
