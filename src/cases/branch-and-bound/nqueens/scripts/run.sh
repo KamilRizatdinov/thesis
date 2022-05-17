@@ -7,6 +7,7 @@ then
   echo "Running AssemblyScript"
   v8 --module ./assemblyscript/bench.js -- ./build/assemblyscript/index.wasm
 elif [ $LANG = "js" ]
+then
   echo "Running JavaScript"
   v8 --module ./javascript/bench.js
 else
