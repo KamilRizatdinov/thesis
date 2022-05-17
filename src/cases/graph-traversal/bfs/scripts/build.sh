@@ -2,6 +2,7 @@
 
 ENVIRONMENT=$1
 ASC_OPTIMIZER=$2
+ASC_SOURCE=$3
 
 # Remove previous build
 
@@ -9,10 +10,10 @@ rm -rf ./build
 
 # AssemblyScript
 
-SOURCEFILE=./assemblyscript/index.ts
+SOURCEFILE=./assemblyscript/$ASC_SOURCE/index.ts
+ASCONFIG=./assemblyscript/asconfig.json
 TARGETFILE=./build/assemblyscript/index.js
 TMPFILE=./build/assemblyscript/tmp.js
-ASCONFIG=./assemblyscript/asconfig.json
 
 
 if [ $ASC_OPTIMIZER ]
