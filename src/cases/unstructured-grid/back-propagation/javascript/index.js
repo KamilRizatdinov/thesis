@@ -57,7 +57,7 @@ function bpnn_randomize_array(w, m, n) {
 
 function loadInput(w, m, n) {
   var i = 1,
-    l = (m + 1) * (n + 1);
+    l = (m + 1) * n;
 
   for (i = 1; i < l; i++) {
     w[i] = Math.random();
@@ -219,13 +219,19 @@ function backprop_face(layer_size) {
   //entering the training kernel, only one iteration
   bpnn_train_kernel(net);
 
-  net = null;
-  return {
-    status: 1,
-    options: 'runBackProp(' + layer_size + ')',
-  };
+  // console.log(`${net.input_n} ${net.hidden_n} ${net.output_n}`);
+  // console.log(net.input_units.join(' '));
+  // console.log(net.hidden_units.join(' '));
+  // console.log(net.output_units.join(' '));
+  // console.log(net.hidden_delta.join(' '));
+  // console.log(net.output_delta.join(' '));
+  // console.log(net.target.join(' '));
+  // console.log(net.input_weights.join(' '));
+  // console.log(net.hidden_weights.join(' '));
+  // console.log(net.input_prev_weights.join(' '));
+  // console.log(net.hidden_prev_weights.join(' '));
 }
 
 export function main(nb_input_elems) {
-  return backprop_face(nb_input_elems);
+  backprop_face(nb_input_elems);
 }

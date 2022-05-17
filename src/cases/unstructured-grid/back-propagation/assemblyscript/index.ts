@@ -1,21 +1,20 @@
-var seed = 49734321;
+let seed = 49734321;
 
-var commonRandom = (function (): () => i32 {
-  return function (): i32 {
-    // Robert Jenkins' 32 bit integer hash function.
-    seed = (seed + 0x7ed55d16 + (seed << 12)) & 0xffffffff;
-    seed = (seed ^ 0xc761c23c ^ (seed >>> 19)) & 0xffffffff;
-    seed = (seed + 0x165667b1 + (seed << 5)) & 0xffffffff;
-    seed = ((seed + 0xd3a2646c) ^ (seed << 9)) & 0xffffffff;
-    seed = (seed + 0xfd7046c5 + (seed << 3)) & 0xffffffff;
-    seed = (seed ^ 0xb55a4f09 ^ (seed >>> 16)) & 0xffffffff;
-    return seed;
-  };
-})();
+function commonRandom(): i32 {
+  // Robert Jenkins' 32 bit integer hash function.
+  seed = (seed + 0x7ed55d16 + (seed << 12)) & 0xffffffff;
+  seed = (seed ^ 0xc761c23c ^ (seed >>> 19)) & 0xffffffff;
+  seed = (seed + 0x165667b1 + (seed << 5)) & 0xffffffff;
+  seed = ((seed + 0xd3a2646c) ^ (seed << 9)) & 0xffffffff;
+  seed = (seed + 0xfd7046c5 + (seed << 3)) & 0xffffffff;
+  seed = (seed ^ 0xb55a4f09 ^ (seed >>> 16)) & 0xffffffff;
+  return seed;
+}
 
-var commonRandomJS = function (): f64 {
-  return Math.abs(commonRandom() / 0x7fffffff);
-};
+function commonRandomJS(): f64 {
+  const commonRand = <f64>commonRandom();
+  return Math.abs(commonRand / 0x7fffffff);
+}
 
 function squash(x: f64): f64 {
   return 1.0 / (1.0 + Math.exp(-x));
@@ -70,7 +69,7 @@ function bpnn_randomize_array(w: Float64Array, m: i32, n: i32): void {
 
 function loadInput(w: Float64Array, m: i32, n: i32): void {
   var i = 1,
-    l = (m + 1) * (n + 1);
+    l = (m + 1) * n;
 
   for (i = 1; i < l; i++) {
     w[i] = commonRandomJS();
@@ -258,11 +257,23 @@ var ETA = 0.3; //eta value
 var MOMENTUM = 0.3; //momentum value
 
 function backprop_face(layer_size: i32): void {
-  var net: Net | null = bpnn_create(layer_size, 16, 1); // (16, 1 can not be changed)
+  var net: Net = bpnn_create(layer_size, 16, 1); // (16, 1 can not be changed)
   //entering the training kernel, only one iteration
   if (net) bpnn_train_kernel(net);
 
-  net = null;
+  // console.log(
+  //   `${net.input_n.toString()} ${net.hidden_n.toString()} ${net.output_n.toString()}`,
+  // );
+  // console.log(net.input_units.join(' '));
+  // console.log(net.hidden_units.join(' '));
+  // console.log(net.output_units.join(' '));
+  // console.log(net.hidden_delta.join(' '));
+  // console.log(net.output_delta.join(' '));
+  // console.log(net.target.join(' '));
+  // console.log(net.input_weights.join(' '));
+  // console.log(net.hidden_weights.join(' '));
+  // console.log(net.input_prev_weights.join(' '));
+  // console.log(net.hidden_prev_weights.join(' '));
 }
 
 export function main(nb_input_elems: i32): void {
