@@ -371,16 +371,16 @@ function acc_b_dev(
   obs_t: i32,
   t: i32,
 ): void {
-  // var i: i32;
-  // var j: i32;
-  // for (i = 0; i < nstates; ++i) {
-  //   for (j = 0; j < nsymbols; ++j) {
-  //     if (j == obs_t) {
-  //       b_d[j * nstates + i] +=
-  //         (alpha_d[t * nstates + i] * beta_d[t * nstates + i]) / sum_ab;
-  //     }
-  //   }
-  // }
+  var i: i32;
+  var j: i32;
+  for (i = 0; i < nstates; ++i) {
+    for (j = 0; j < nsymbols; ++j) {
+      if (j == obs_t) {
+        b_d[j * nstates + i] +=
+          (alpha_d[t * nstates + i] * beta_d[t * nstates + i]) / sum_ab;
+      }
+    }
+  }
 }
 
 /* Re-estimate B values */
