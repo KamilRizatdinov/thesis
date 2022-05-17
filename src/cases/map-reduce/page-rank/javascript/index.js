@@ -102,5 +102,5 @@ export function main(n, iter, thresh, divisor) {
     max_diff = reduce_page_rank(page_ranks, maps, n);
   }
 
-  console.log(max_diff.toString());
+  // console.log(max_diff.toString());
 }

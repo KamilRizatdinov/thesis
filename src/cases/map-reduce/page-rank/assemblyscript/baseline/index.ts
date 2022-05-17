@@ -112,5 +112,5 @@ export function main(n: i32, iter: i32, thresh: f64, divisor: i32): void {
     max_diff = reduce_page_rank(page_ranks, maps, n);
   }
 
-  console.log(max_diff.toString());
+  // console.log(max_diff.toString());
 }
