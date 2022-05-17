@@ -74,6 +74,6 @@ export function main(s1, s2) {
     return v.reverse().join('');
   });
 
-  console.log(result.join('\n\n'));
+  // console.log(result.join('\n\n'));
   return result;
 }

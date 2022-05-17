@@ -13,8 +13,6 @@ const results = await benchmarkWrapper({
       'asdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdasdfsadfsadfsadfsadfasdfsdafsadfsadfsfasasdfasdfsadfadsfsdafsdafdfsdfasdfsdfsdafasdfsdfsdfsdfsdfsdfsadgs',
     );
   },
-  numIterations: 1,
-  numWarmup: 0,
 });
 
 console.log([mean(results), peak(results), min(results)].join());
