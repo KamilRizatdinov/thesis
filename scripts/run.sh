@@ -18,17 +18,17 @@ function run () {
   elif [[ $LANG = "asc" ]]
   then
     echo $BENCHMARK_DIR: AssemblyScript Liftoff ⏳
-    v8 --module --liftoff-only ./assemblyscript/bench.js -- ./build/assemblyscript/index.wasm
+    v8 --module --liftoff-only ./assemblyscript/bench.js -- ./build/assemblyscript/index.wasm > ./results/asc_liftoff.txt
     echo $BENCHMARK_DIR: AssemblyScript Turbofan ⏳
-    v8 --module --no-liftoff --no-wasm-tier-up ./assemblyscript/bench.js -- ./build/assemblyscript/index.wasm
+    v8 --module --no-liftoff --no-wasm-tier-up ./assemblyscript/bench.js -- ./build/assemblyscript/index.wasm > ./results/asc_turbofan.txt
   elif [[ $LANG = "js" ]]
   then
     echo $BENCHMARK_DIR: JavaScript Ignition ⏳
-    v8 --module --no-opt ./javascript/bench.js
+    v8 --module --no-opt ./javascript/bench.js > ./results/js_ignition.txt
     echo $BENCHMARK_DIR: JavaScript Sparkplug ⏳
-    v8 --module --sparkplug --always-sparkplug ./javascript/bench.js
+    v8 --module --sparkplug --always-sparkplug ./javascript/bench.js > ./results/js_sparkplug.txt
     echo $BENCHMARK_DIR: JavaScript Turbofan ⏳
-    v8 --module ./javascript/bench.js
+    v8 --module ./javascript/bench.js > ./results/js_turbofan.txt
   else
     echo Language $LANG is not implemented ❌
     exit 0

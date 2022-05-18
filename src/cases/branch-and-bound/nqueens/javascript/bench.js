@@ -1,9 +1,4 @@
-import {
-  benchmarkWrapper,
-  mean,
-  peak,
-  min,
-} from '../../../../utils/benchmarkWrapper';
+import {benchmarkWrapper} from '../../../../utils/benchmarkWrapper';
 import {main} from './index.js';
 
 const results = await benchmarkWrapper({

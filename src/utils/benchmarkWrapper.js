@@ -16,7 +16,7 @@ export async function benchmarkWrapper({
     await run.call(context);
     await after.call(context);
   }
-  
+
   for (let i = 0; i < numIterations; i++) {
     const context = {};
     await before.call(context);
@@ -26,16 +26,4 @@ export async function benchmarkWrapper({
     await after.call(context);
   }
   return results;
-}
-
-export function mean(list) {
-  return list.reduce((prev, curr) => prev + curr) / list.length;
-}
-
-export function peak(list) {
-  return list.reduce((prev, curr) => prev > curr ? prev : curr);
-}
-
-export function min(list) {
-  return list.reduce((prev, curr) => prev < curr ? prev : curr);
 }
