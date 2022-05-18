@@ -11,9 +11,29 @@ function commonRandom(): i32 {
   return seed;
 }
 
-function commonRandomJS(): f64 {
-  const commonRand = <f64>commonRandom();
-  return Math.abs(commonRand / 0x7fffffff);
+function commonRandomJS(): f32 {
+  const commonRand = <f32>commonRandom();
+  return abs(commonRand / 0x7fffffff);
+}
+
+function randNorm(): f64 {
+  return gaussian.nextGaussian();
+}
+
+function genRand(lb: i32, hb: i32): i32 {
+  if (lb < 0 || hb < 0 || hb < lb) return 0;
+
+  var range = hb - lb + 1;
+  return (abs(commonRandom()) % range) + lb;
+}
+
+function rand(): f32 {
+  var n = commonRandomJS() * <f32>(Math.pow(2, 32) - 1);
+  return floor(n) ? floor(n) : ceil(n);
+}
+
+function randf(): f32 {
+  return 1.0 - 2.0 * (rand() / 2147483648.0);
 }
 
 class Ziggurat {
@@ -119,26 +139,6 @@ class Ziggurat {
 }
 
 var gaussian = new Ziggurat();
-
-function randNorm(): f64 {
-  return gaussian.nextGaussian();
-}
-
-function genRand(lb: i32, hb: i32): i32 {
-  if (lb < 0 || hb < 0 || hb < lb) return 0;
-
-  var range = hb - lb + 1;
-  return (rand() % range) + lb;
-}
-
-function rand(): i32 {
-  var n = commonRandomJS() * (Math.pow(2, 32) - 1);
-  return <i32>(Math.floor(n) ? Math.floor(n) : Math.ceil(n));
-}
-
-function randf(): f32 {
-  return <f32>(1.0 - 2.0 * (rand() / (2147483647 + 1.0)));
-}
 
 function sortArray(a: Int32Array, start: u32, finish: u32): void {
   // TA
@@ -291,6 +291,10 @@ export function main(
     v[i] = randf();
   }
 
+  // console.log(v.join(' '));
+
   for (i = 0; i < iterations; ++i)
     spmv_csr(m.Ax, dim, m.Arow, m.Acol, v, y, out);
+
+  // console.log(out.join('\n'));
 }

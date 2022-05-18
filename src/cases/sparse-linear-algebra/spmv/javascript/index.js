@@ -127,7 +127,7 @@ function genRand(lb, hb) {
   if (lb < 0 || hb < 0 || hb < lb) return 0;
 
   var range = hb - lb + 1;
-  return (rand() % range) + lb;
+  return (Math.abs(Math.commonRandom()) % range) + lb;
 }
 
 function rand() {
@@ -136,7 +136,7 @@ function rand() {
 }
 
 function randf() {
-  return 1.0 - 2.0 * (rand() / (2147483647 + 1.0));
+  return 1.0 - 2.0 * (rand() / 2147483648.0);
 }
 
 function sortArray(a, start, finish) {
@@ -260,10 +260,15 @@ export function main(dim, density, stddev, iterations) {
   var v = new Float32Array(dim);
   var y = new Float32Array(dim);
   var out = new Float32Array(dim);
+
   ArrayOld.prototype.forEach.call(v, function (n, i, a) {
     a[i] = randf();
   });
 
+  // console.log(v.join(' '));
+
   for (var i = 0; i < iterations; ++i)
     spmv_csr(m.Ax, dim, m.Arow, m.Acol, v, y, out);
+
+  // console.log(out.join('\n'));
 }
