@@ -12,26 +12,35 @@ function run () {
   if [[ $LANG = "all" ]] || [[ $LANG = "asc" ]]
   then
     echo $BENCHMARK_DIR: AssemblyScript Liftoff ⏳
-    v8 --module --liftoff-only ./assemblyscript/bench.js -- ./build/assemblyscript/index.wasm > ./results/asc_liftoff.txt
+    echo asc_liftoff > ./results/asc_liftoff.txt
+    v8 --module --liftoff-only ./assemblyscript/bench.js -- ./build/assemblyscript/index.wasm >> ./results/asc_liftoff.txt
     echo $BENCHMARK_DIR: AssemblyScript Turbofan ⏳
-    v8 --module --no-liftoff --no-wasm-tier-up ./assemblyscript/bench.js -- ./build/assemblyscript/index.wasm > ./results/asc_turbofan.txt
-  else
-    echo Language $LANG is not implemented ❌
-    exit 0
+    echo asc_turbofan > ./results/asc_turbofan.txt
+    v8 --module --no-liftoff --no-wasm-tier-up ./assemblyscript/bench.js -- ./build/assemblyscript/index.wasm >> ./results/asc_turbofan.txt
   fi
 
   if [[ $LANG = "all" ]] || [[ $LANG = "js" ]]
   then
     echo $BENCHMARK_DIR: JavaScript Ignition ⏳
-    v8 --module --no-opt ./javascript/bench.js > ./results/js_ignition.txt
+    echo js_ignition > ./results/js_ignition.txt
+    v8 --module --no-opt ./javascript/bench.js >> ./results/js_ignition.txt
     echo $BENCHMARK_DIR: JavaScript Sparkplug ⏳
-    v8 --module --sparkplug --always-sparkplug ./javascript/bench.js > ./results/js_sparkplug.txt
+    echo js_sparkplug > ./results/js_sparkplug.txt
+    v8 --module --sparkplug --always-sparkplug ./javascript/bench.js >> ./results/js_sparkplug.txt
     echo $BENCHMARK_DIR: JavaScript Turbofan ⏳
-    v8 --module ./javascript/bench.js > ./results/js_turbofan.txt
-  else
-    echo Language $LANG is not implemented ❌
-    exit 0
+    echo js_turbofan > ./results/js_turbofan.txt
+    v8 --module ./javascript/bench.js >> ./results/js_turbofan.txt
   fi
+
+  rm -f ./results/results.csv
+  rm -f ./results/results.html
+  echo -e "asc_liftoff\n$(cat ./results/asc_liftoff.txt)" > ./results/asc_liftoff.txt
+  echo -e "asc_turbofan\n$(cat ./results/asc_turbofan.txt)" > ./results/asc_turbofan.txt
+  echo -e "js_ignition\n$(cat ./results/js_ignition.txt)" > ./results/js_ignition.txt
+  echo -e "js_sparkplug\n$(cat ./results/js_sparkplug.txt)" > ./results/js_sparkplug.txt
+  echo -e "js_turbofan\n$(cat ./results/js_turbofan.txt)" > ./results/js_turbofan.txt
+  paste -d "," ./results/asc_liftoff.txt ./results/asc_turbofan.txt ./results/js_ignition.txt ./results/js_sparkplug.txt ./results/js_turbofan.txt > ./results/results.csv
+  cat ./results/results.csv | npx chart-csv > ./results/results.html
 
   cd ../../../../
 }

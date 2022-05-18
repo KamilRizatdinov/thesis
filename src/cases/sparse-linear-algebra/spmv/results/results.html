@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>chart-csv</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.css" rel="stylesheet" type="text/css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.15/d3.min.js" charset="utf-8"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
+</head>
+<body onload="run()">
+
+<div id="graph"></div>
+
+<script>
+
+function parseCSV (csv) {
+  return csv.split('\n')
+    .filter(function (row) {
+      return !!row.trim()
+    })
+    .map(function (row) {
+      return row.split(',')
+    })
+}
+
+function haveHead (csv) {
+  return !/^\d+$/.test(csv[0][0])
+}
+
+function chart (id, csv) {
+  csv = parseCSV(csv)
+
+  var columns = []
+  var showLegend = haveHead(csv)
+
+  if (showLegend) {
+    csv.shift().forEach(function (head) {
+      columns.push([head])
+    })
+  } else {
+    for (var n = 0; n < csv[0].length; n++) {
+      columns.push([n])
+    }
+  }
+
+  csv.forEach(function (r) {
+    r.forEach(function (c, i) {
+      columns[i].push(parseInt(c, 10))
+    })
+  })
+
+  var opts = {
+    bindto: '#' + id,
+    data: {
+      columns: columns,
+      type: 'line'
+    },
+    point: { show: false },
+    axis: { x: { show: false } },
+    legend: { show: showLegend }
+  }
+
+  c3.generate(opts)
+}
+
+function run () {
+  chart('graph', csv)
+}
+
+var csv = `
+asc_liftoff,asc_turbofan,js_ignition,js_sparkplug,js_turbofan
+58,17,607,46,47
+58,17,606,48,46
+61,16,601,47,47
+59,17,605,47,46
+59,16,604,47,47
+58,17,605,47,46
+60,17,613,46,47
+58,17,605,47,48
+59,16,604,48,46
+59,17,602,47,49
+62,18,604,46,47
+59,16,604,46,46
+60,17,604,49,47
+58,16,604,48,46
+59,17,603,46,49
+59,16,608,50,46
+58,17,606,47,51
+58,17,603,47,46
+59,16,605,46,47
+61,17,608,47,46
+59,16,603,47,47
+58,16,607,46,47
+58,17,603,48,46
+58,17,611,49,47
+59,16,605,46,46
+58,17,608,48,47
+59,16,606,46,46
+58,17,603,47,46
+59,16,603,46,46
+58,17,616,47,47
+59,17,603,47,47
+58,16,613,46,49
+59,16,607,46,46
+58,17,605,47,47
+58,17,604,46,46
+59,18,610,46,47
+61,17,601,47,46
+58,16,607,46,46
+61,17,601,47,47
+59,17,610,46,47
+58,16,605,46,46
+58,17,600,47,46
+58,17,609,46,47
+59,16,599,47,46
+58,17,604,49,47
+59,17,609,46,46
+59,17,604,50,46
+58,16,604,47,47
+58,16,607,46,46
+59,17,604,47,46
+`
+
+</script>
+</body>
+</html>

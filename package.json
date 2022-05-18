@@ -11,5 +11,8 @@
   "dependencies": {
     "assemblyscript": "^0.20.4",
     "commander": "^9.2.0"
+  },
+  "devDependencies": {
+    "chart-csv": "^1.0.3"
   }
 }

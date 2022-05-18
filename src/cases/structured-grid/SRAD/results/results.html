@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>chart-csv</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.css" rel="stylesheet" type="text/css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.15/d3.min.js" charset="utf-8"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
+</head>
+<body onload="run()">
+
+<div id="graph"></div>
+
+<script>
+
+function parseCSV (csv) {
+  return csv.split('\n')
+    .filter(function (row) {
+      return !!row.trim()
+    })
+    .map(function (row) {
+      return row.split(',')
+    })
+}
+
+function haveHead (csv) {
+  return !/^\d+$/.test(csv[0][0])
+}
+
+function chart (id, csv) {
+  csv = parseCSV(csv)
+
+  var columns = []
+  var showLegend = haveHead(csv)
+
+  if (showLegend) {
+    csv.shift().forEach(function (head) {
+      columns.push([head])
+    })
+  } else {
+    for (var n = 0; n < csv[0].length; n++) {
+      columns.push([n])
+    }
+  }
+
+  csv.forEach(function (r) {
+    r.forEach(function (c, i) {
+      columns[i].push(parseInt(c, 10))
+    })
+  })
+
+  var opts = {
+    bindto: '#' + id,
+    data: {
+      columns: columns,
+      type: 'line'
+    },
+    point: { show: false },
+    axis: { x: { show: false } },
+    legend: { show: showLegend }
+  }
+
+  c3.generate(opts)
+}
+
+function run () {
+  chart('graph', csv)
+}
+
+var csv = `
+asc_liftoff,asc_turbofan,js_ignition,js_sparkplug,js_turbofan
+7812,3263,73215,7037,7026
+7773,3243,75826,7088,6924
+7764,3221,75847,7171,6950
+7760,3215,75440,7131,6948
+7772,3219,75441,6966,6949
+7780,3214,75501,6931,6945
+7779,3251,75501,6957,6951
+7769,3231,75469,6947,6964
+7791,3223,75449,6931,6943
+7774,3248,75473,6926,6940
+7777,3219,75448,6931,6958
+7776,3232,75451,6930,6945
+7791,3225,75428,6945,6948
+7775,3215,75496,6918,6966
+7775,3230,75494,6936,6941
+7785,3237,75504,6937,6936
+7786,3221,75648,6981,6938
+7763,3217,75566,6948,6938
+7793,3233,75563,6932,6953
+7769,3220,75547,6932,6945
+`
+
+</script>
+</body>
+</html>
