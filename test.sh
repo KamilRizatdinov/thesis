@@ -1,10 +1,4 @@
-#!/bin/bash
+DIR=$1
+echo hello from $DIR
 
-ASC_OPTIMIZER=$1
 
-if [ $ASC_OPTIMIZER ] 
-then
-	echo "optimizing"
-else
-	echo "no optimization"
-fi

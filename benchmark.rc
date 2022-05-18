@@ -1,2 +1,1 @@
-alias build="./scripts/build.sh"
-alias run="./scripts/run.sh"
+alias cli="node index.js"

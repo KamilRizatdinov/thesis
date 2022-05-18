@@ -9,6 +9,7 @@
   "author": "Kamil Rizatdinov",
   "license": "MIT",
   "dependencies": {
-    "assemblyscript": "^0.20.4"
+    "assemblyscript": "^0.20.4",
+    "commander": "^9.2.0"
   }
 }
