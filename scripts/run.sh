@@ -5,7 +5,6 @@ LANG=$2
 
 function run () {
   echo ============================================
-  echo $BENCHMARK_DIR: Running ⏳
 
   cd $BENCHMARK_DIR
 

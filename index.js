@@ -57,7 +57,7 @@ program
     'all',
   )
   .option(
-    '[-l, --language [language]]',
+    '-l , --language [language]',
     'Language to run (e.g. "js"/"asc"))',
     'all',
   )
