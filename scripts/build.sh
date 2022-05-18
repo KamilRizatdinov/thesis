@@ -4,6 +4,7 @@ BENCHMARK_DIR=$1
 ASC_SOURCE=$2
 ASC_ENVIRONMENT=$3
 ASC_OPTIMIZER=$4
+ASC_RUNTIME=$5
 
 run_build () {  
   echo ============================================
@@ -20,12 +21,7 @@ run_build () {
 
   # AssemblyScript
 
-  if [ $ASC_OPTIMIZER ]
-  then
-    npx asc $SOURCEFILE  --config $ASCONFIG  --target $ASC_ENVIRONMENT -${ASC_OPTIMIZER}
-  else
-    npx asc $SOURCEFILE  --config $ASCONFIG  --target $ASC_ENVIRONMENT
-  fi
+  npx asc $SOURCEFILE  --config $ASCONFIG  --target $ASC_ENVIRONMENT -${ASC_OPTIMIZER} --runtime ${ASC_RUNTIME}
 
   mv $TARGETFILE $TMPFILE
 

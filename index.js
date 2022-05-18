@@ -25,9 +25,14 @@ program
     'release',
   )
   .option(
-    '-o, --optimize [optimization]',
+    '-o, --optimization [optimization]',
     'Optimization level for build (e.g. "O3s")',
     'O3',
+  )
+  .option(
+    '-r, --runtime [runtime]',
+    'AssemblyScript runtime for build (e.g. "minimal/stub")',
+    'incremental',
   )
   .action((src, options) => {
     var child = execFile(
@@ -37,7 +42,8 @@ program
         src,
         options.branch,
         options.env,
-        options.optimize,
+        options.optimization,
+        options.runtime,
       ],
       (error, stdout, stderr) => {
         if (error) throw error;
@@ -61,10 +67,15 @@ program
     'Language to run (e.g. "js"/"asc"))',
     'all',
   )
+  .option(
+    '-e, --env [environment]',
+    'In which environment to run? (e.g. "browser")',
+    'node',
+  )
   .action((src, options) => {
     var child = execFile(
       'sh',
-      [`${process.env.PWD}/scripts/run.sh`, src, options.language],
+      [`${process.env.PWD}/scripts/run.sh`, src, options.language, options.env],
       (error, stdout, stderr) => {
         if (error) throw error;
       },

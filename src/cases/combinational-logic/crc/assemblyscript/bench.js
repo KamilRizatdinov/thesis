@@ -14,4 +14,4 @@ const results = await benchmarkWrapper({
   },
 });
 
-console.log([mean(results), peak(results), min(results)].join());
+console.log(results.join('\n'));
