@@ -255,9 +255,10 @@ function nqueenJS(size: i32, unique_solutions: Map<string, i32>): i32 {
   return solutions;
 }
 
-export function main(size: i32): void {
+export function main(size: i32): i32 {
   var us = new Map<string, i32>();
   var result: i32 = nqueenJS(size, us);
 
   // console.log(result.toString());
+  return result;
 }

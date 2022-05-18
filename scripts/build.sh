@@ -42,6 +42,8 @@ run_build () {
 
   rm -f $TMPFILE
 
+  cp bench.html ./build
+
   # JavaScript
 
   cp -r javascript/ ./build/javascript

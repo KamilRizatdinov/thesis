@@ -243,4 +243,5 @@ export function main(size) {
   var result = nqueenJS(size, us);
 
   // console.log(result);
+  return result;
 }

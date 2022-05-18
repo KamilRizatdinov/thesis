@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <h1>Lavamd</h1>
+    <h2>AssemblyScript</h2>
+    <div id="asc"></div>
+    <h2>JavaScript</h2>
+    <div id="js"></div>
+    <script type="module">
+      import { main as mainASC } from "./assemblyscript/index.js";
+      document.querySelector("#asc").innerText = mainASC(6);
+
+      import { main as mainJS } from "./javascript/index.js";
+      document.querySelector("#js").innerText = mainJS(6);
+    </script>
+  </body>
+</html>
