@@ -5,8 +5,7 @@ const results = await benchmarkWrapper({
   async run() {
     main(500, 1);
   },
-  numIterations: 10,
-  numWarmup: 5,
+  numIterations: 20,
 });
 
 console.log(results.join('\n'));

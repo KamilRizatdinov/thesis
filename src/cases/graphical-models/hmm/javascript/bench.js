@@ -3,7 +3,7 @@ import {main} from '../build/javascript/index.js';
 
 const results = await benchmarkWrapper({
   async run() {
-    main('n', 500);
+    main('n', 100);
   },
 });
 

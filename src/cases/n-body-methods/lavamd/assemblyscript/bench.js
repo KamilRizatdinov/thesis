@@ -3,7 +3,7 @@ import {main} from '../build/assemblyscript/index.js';
 
 const results = await benchmarkWrapper({
   async run() {
-    main(6);
+    main(3);
   },
 });
 
