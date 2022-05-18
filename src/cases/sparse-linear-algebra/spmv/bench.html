@@ -8,10 +8,18 @@
     <div id="js"></div>
     <script type="module">
       import { main as mainASC } from "./assemblyscript/index.js";
-      document.querySelector("#asc").innerText = mainASC(5000, 2000, 0.01, 10);
+      const startASC = performance.now();
+      mainASC(5000, 2000, 0.01, 10);
+      const endASC = performance.now();
+      document.querySelector("#asc").innerText = endASC - startASC;
+    </script>
 
+    <script type="module">
       import { main as mainJS } from "./javascript/index.js";
-      document.querySelector("#js").innerText = mainJS(5000, 2000, 0.01, 10);
+      const startJS = performance.now();
+      mainJS(5000, 2000, 0.01, 10);
+      const endJS = performance.now();
+      document.querySelector("#js").innerText = endJS - startJS;
     </script>
   </body>
 </html>
