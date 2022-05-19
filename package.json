@@ -13,6 +13,7 @@
     "commander": "^9.2.0"
   },
   "devDependencies": {
-    "chart-csv": "^1.0.3"
+    "chart-csv": "^1.0.3",
+    "deoptigate": "^0.6.0"
   }
 }
