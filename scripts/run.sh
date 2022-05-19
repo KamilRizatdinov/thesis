@@ -32,15 +32,14 @@ function run () {
     v8 --module ./javascript/bench.js >> ./results/js_turbofan.txt
   fi
 
+  echo $BENCHMARK_DIR: Generating reports ⏳
+
   rm -f ./results/results.csv
   rm -f ./results/results.html
-  echo -e "asc_liftoff\n$(cat ./results/asc_liftoff.txt)" > ./results/asc_liftoff.txt
-  echo -e "asc_turbofan\n$(cat ./results/asc_turbofan.txt)" > ./results/asc_turbofan.txt
-  echo -e "js_ignition\n$(cat ./results/js_ignition.txt)" > ./results/js_ignition.txt
-  echo -e "js_sparkplug\n$(cat ./results/js_sparkplug.txt)" > ./results/js_sparkplug.txt
-  echo -e "js_turbofan\n$(cat ./results/js_turbofan.txt)" > ./results/js_turbofan.txt
   paste -d "," ./results/asc_liftoff.txt ./results/asc_turbofan.txt ./results/js_ignition.txt ./results/js_sparkplug.txt ./results/js_turbofan.txt > ./results/results.csv
   cat ./results/results.csv | npx chart-csv > ./results/results.html
+
+  echo $BENCHMARK_DIR: Done ✅
 
   cd ../../../../
 }
