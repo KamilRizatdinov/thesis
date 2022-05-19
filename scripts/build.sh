@@ -41,8 +41,10 @@ run_build () {
   cp bench.html ./build
 
   # JavaScript
-
   cp -r javascript/ ./build/javascript
+
+  cp ./bench.js ./build/assemblyscript
+  cp ./bench.js ./build/javascript
 
   echo $BENCHMARK_DIR: Done ✅
 
