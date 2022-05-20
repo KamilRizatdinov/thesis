@@ -1,4 +1,8 @@
-import {init, getFunctionsStatuses} from '../../../../../utils/trace';
+import {
+  init,
+  getFunctionsStatuses,
+  formatResults,
+} from '../../../../../utils/trace';
 
 var MIN_EDGES = 2;
 var MAX_INIT_EDGES = 4;
@@ -149,16 +153,17 @@ export function main(no_of_nodes) {
 }
 
 init();
-for (let i = 0; i < 50; i++) {
-  console.log(
-    getFunctionsStatuses([
-      commonRandom,
-      node,
-      edge,
-      InitializeGraph,
-      main,
-    ]).join('\n'),
-  );
 
+const functions = [commonRandom, node, edge, InitializeGraph, main];
+
+let results = [];
+
+for (let i = 0; i < 50; i++) {
+  const statuses = getFunctionsStatuses(functions);
+  const start = Date.now();
   main(100000);
+  const time = Date.now() - start;
+  results.push(statuses.map(status => `${time},${i},${status}`));
 }
+
+console.log(formatResults(results));

@@ -1,4 +1,8 @@
-import {init, getFunctionsStatuses} from '../../../../../utils/trace';
+import {
+  init,
+  getFunctionsStatuses,
+  formatResults,
+} from '../../../../../utils/trace';
 
 var seed = 49734321;
 
@@ -94,16 +98,17 @@ export function main(size) {
 }
 
 init();
-for (let i = 0; i < 50; i++) {
-  console.log(
-    getFunctionsStatuses([
-      // commonRandom,
-      // commonRandomJS,
-      // randomMatrix,
-      // lud,
-      main,
-    ]).join('\n'),
-  );
 
+const functions = [commonRandom, commonRandomJS, randomMatrix, lud, main];
+
+let results = [];
+
+for (let i = 0; i < 50; i++) {
+  const statuses = getFunctionsStatuses(functions);
+  const start = Date.now();
   main(300);
+  const time = Date.now() - start;
+  results.push(statuses.map(status => `${time},${i},${status}`));
 }
+
+console.log(formatResults(results));

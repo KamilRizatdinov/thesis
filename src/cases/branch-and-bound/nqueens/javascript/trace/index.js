@@ -1,4 +1,8 @@
-import {init, getFunctionsStatuses} from '../../../../../utils/trace';
+import {
+  init,
+  getFunctionsStatuses,
+  formatResults,
+} from '../../../../../utils/trace';
 
 var bit_mask1 = parseInt('0xaaaaaaaa', 16);
 var bit_mask2 = parseInt('0xcccccccc', 16);
@@ -247,17 +251,24 @@ export function main(size) {
 }
 
 init();
-for (let i = 0; i < 50; i++) {
-  console.log(
-    getFunctionsStatuses([
-      bit_scan,
-      transform,
-      nqueen_solver,
-      nqueen_solver1,
-      nqueenJS,
-      main,
-    ]).join('\n'),
-  );
 
+const functions = [
+  bit_scan,
+  transform,
+  nqueen_solver,
+  nqueen_solver1,
+  nqueenJS,
+  main,
+];
+
+let results = [];
+
+for (let i = 0; i < 50; i++) {
+  const statuses = getFunctionsStatuses(functions);
+  const start = Date.now();
   main(8);
+  const time = Date.now() - start;
+  results.push(statuses.map(status => `${time},${i},${status}`));
 }
+
+console.log(formatResults(results));
