@@ -72,10 +72,17 @@ program
     'In which environment to run? (e.g. "browser")',
     'node',
   )
+  .option('-t, --type [type]', 'Run type (e.g. "trace")', 'benchmark')
   .action((src, options) => {
     var child = execFile(
       'sh',
-      [`${process.env.PWD}/scripts/run.sh`, src, options.language, options.env],
+      [
+        `${process.env.PWD}/scripts/run.sh`,
+        src,
+        options.language,
+        options.env,
+        options.type,
+      ],
       (error, stdout, stderr) => {
         if (error) throw error;
       },

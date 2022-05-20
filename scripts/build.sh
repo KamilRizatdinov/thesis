@@ -41,7 +41,8 @@ run_build () {
   cp bench.html ./build
 
   # JavaScript
-  cp -r javascript/ ./build/javascript
+  mkdir ./build/javascript
+  cp javascript/benchmark/index.js ./build/javascript
 
   cp ./bench.js ./build/assemblyscript
   cp ./bench.js ./build/javascript

@@ -3,41 +3,63 @@
 BENCHMARK_DIR=$1
 LANG=$2
 ENVIRONMENT=$3
+TYPE=$4
+
+BENCHMARK_RESULTS_DIR=./results/benchmark
+TRACE_RESULTS_DIR=./results/trace
+
+function run_bench () {
+  if [[ $LANG = "all" ]] || [[ $LANG = "asc" ]]
+  then
+    echo $BENCHMARK_DIR: AssemblyScript Turbofan ⏳
+    echo asc_turbofan > $BENCHMARK_RESULTS_DIR/asc_turbofan.txt
+    v8 --module --no-liftoff --no-wasm-tier-up ./build/assemblyscript/bench.js -- ./build/assemblyscript/index.wasm >> $BENCHMARK_RESULTS_DIR/asc_turbofan.txt
+    echo $BENCHMARK_DIR: AssemblyScript Liftoff ⏳
+    echo asc_liftoff > $BENCHMARK_RESULTS_DIR/asc_liftoff.txt
+    v8 --module --liftoff-only ./build/assemblyscript/bench.js -- ./build/assemblyscript/index.wasm >> $BENCHMARK_RESULTS_DIR/asc_liftoff.txt
+  fi
+
+  if [[ $LANG = "all" ]] || [[ $LANG = "js" ]]
+  then
+  echo $BENCHMARK_DIR: JavaScript Turbofan ⏳
+    echo js_turbofan > $BENCHMARK_RESULTS_DIR/js_turbofan.txt
+    v8 --module ./build/javascript/bench.js >> $BENCHMARK_RESULTS_DIR/js_turbofan.txt
+    echo $BENCHMARK_DIR: JavaScript Sparkplug ⏳
+    echo js_sparkplug > $BENCHMARK_RESULTS_DIR/js_sparkplug.txt
+    v8 --module --sparkplug --always-sparkplug ./build/javascript/bench.js >> $BENCHMARK_RESULTS_DIR/js_sparkplug.txt
+    echo $BENCHMARK_DIR: JavaScript Ignition ⏳
+    echo js_ignition > $BENCHMARK_RESULTS_DIR/js_ignition.txt
+    v8 --module --no-opt ./build/javascript/bench.js >> $BENCHMARK_RESULTS_DIR/js_ignition.txt    
+  fi
+
+  echo $BENCHMARK_DIR: Generating benchmark reports ⏳
+
+  rm -f $BENCHMARK_RESULTS_DIR/results.csv
+  rm -f $BENCHMARK_RESULTS_DIR/results.html
+  paste -d "," $BENCHMARK_RESULTS_DIR/asc_liftoff.txt $BENCHMARK_RESULTS_DIR/asc_turbofan.txt $BENCHMARK_RESULTS_DIR/js_ignition.txt $BENCHMARK_RESULTS_DIR/js_sparkplug.txt $BENCHMARK_RESULTS_DIR/js_turbofan.txt > $BENCHMARK_RESULTS_DIR/results.csv
+  cat $BENCHMARK_RESULTS_DIR/results.csv | npx chart-csv > $BENCHMARK_RESULTS_DIR/results.html
+}
+
+function run_trace () {
+  echo $BENCHMARK_DIR: JavaScript ⏳
+  v8 --module --allow-natives-syntax ./javascript/trace/index.js > $TRACE_RESULTS_DIR/results.csv
+}
 
 function run () {
   echo ============================================
 
   cd $BENCHMARK_DIR
 
-  if [[ $LANG = "all" ]] || [[ $LANG = "asc" ]]
+  if [[ $TYPE = "benchmark" ]]
   then
-    echo $BENCHMARK_DIR: AssemblyScript Turbofan ⏳
-    echo asc_turbofan > ./results/asc_turbofan.txt
-    v8 --module --no-liftoff --no-wasm-tier-up ./build/assemblyscript/bench.js -- ./build/assemblyscript/index.wasm >> ./results/asc_turbofan.txt
-    echo $BENCHMARK_DIR: AssemblyScript Liftoff ⏳
-    echo asc_liftoff > ./results/asc_liftoff.txt
-    v8 --module --liftoff-only ./build/assemblyscript/bench.js -- ./build/assemblyscript/index.wasm >> ./results/asc_liftoff.txt
-  fi
-
-  if [[ $LANG = "all" ]] || [[ $LANG = "js" ]]
+    run_bench
+  elif [[ $TYPE = "trace" ]]
   then
-  echo $BENCHMARK_DIR: JavaScript Turbofan ⏳
-    echo js_turbofan > ./results/js_turbofan.txt
-    v8 --module ./build/javascript/bench.js >> ./results/js_turbofan.txt
-    echo $BENCHMARK_DIR: JavaScript Sparkplug ⏳
-    echo js_sparkplug > ./results/js_sparkplug.txt
-    v8 --module --sparkplug --always-sparkplug ./build/javascript/bench.js >> ./results/js_sparkplug.txt
-    echo $BENCHMARK_DIR: JavaScript Ignition ⏳
-    echo js_ignition > ./results/js_ignition.txt
-    v8 --module --no-opt ./build/javascript/bench.js >> ./results/js_ignition.txt    
+    run_trace
+  else
+    echo $BENCHMARK_DIR: No such type: $TYPE ❌
+    exit 0
   fi
-
-  echo $BENCHMARK_DIR: Generating reports ⏳
-
-  rm -f ./results/results.csv
-  rm -f ./results/results.html
-  paste -d "," ./results/asc_liftoff.txt ./results/asc_turbofan.txt ./results/js_ignition.txt ./results/js_sparkplug.txt ./results/js_turbofan.txt > ./results/results.csv
-  cat ./results/results.csv | npx chart-csv > ./results/results.html
 
   echo $BENCHMARK_DIR: Done ✅
 
