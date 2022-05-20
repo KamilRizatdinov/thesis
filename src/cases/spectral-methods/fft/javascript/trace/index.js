@@ -2,6 +2,8 @@ import {
   init,
   getFunctionsStatuses,
   formatResults,
+  initHTML,
+  getFunctionsStatusesHTML,
 } from '../../../../../utils/trace';
 
 var seed = 49734321;
@@ -164,3 +166,31 @@ for (let i = 0; i < 10; i++) {
 }
 
 console.log(formatResults(results));
+
+// initHTML();
+
+// const functions = [
+//   commonRandom,
+//   commonRandomJS,
+//   complexPolar,
+//   fftSimple,
+//   fft2D,
+//   randomComplexArray,
+//   randomComplexMatrix,
+//   main,
+// ];
+
+// let results = [];
+
+// for (let i = 0; i < 10; i++) {
+//   const statuses = getFunctionsStatusesHTML(functions);
+//   const start = Date.now();
+//   main(10);
+//   const time = Date.now() - start;
+//   results.push(
+//     statuses.map(status => `<tr><td>${time}</td><td>${i}</td>${status}</tr>`),
+//   );
+// }
+
+// console.log(formatResults(results));
+// console.log('</table>');

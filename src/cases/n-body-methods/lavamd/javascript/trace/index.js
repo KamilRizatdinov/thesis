@@ -2,6 +2,8 @@ import {
   init,
   getFunctionsStatuses,
   formatResults,
+  initHTML,
+  getFunctionsStatusesHTML,
 } from '../../../../../utils/trace';
 
 var NUMBER_PAR_PER_BOX = 100;
@@ -302,3 +304,32 @@ for (let i = 0; i < 50; i++) {
 }
 
 console.log(formatResults(results));
+
+// initHTML();
+
+// const functions = [
+//   commonRandom,
+//   DOT,
+//   createArray,
+//   nei_str,
+//   box_str,
+//   space_mem,
+//   lavamd,
+//   kernel_cpu,
+//   main,
+// ];
+
+// let results = [];
+
+// for (let i = 0; i < 50; i++) {
+//   const statuses = getFunctionsStatusesHTML(functions);
+//   const start = Date.now();
+//   main(3);
+//   const time = Date.now() - start;
+//   results.push(
+//     statuses.map(status => `<tr><td>${time}</td><td>${i}</td>${status}</tr>`),
+//   );
+// }
+
+// console.log(formatResults(results));
+// console.log('</table>');

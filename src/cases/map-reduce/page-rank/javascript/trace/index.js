@@ -2,6 +2,8 @@ import {
   init,
   getFunctionsStatuses,
   formatResults,
+  initHTML,
+  getFunctionsStatusesHTML,
 } from '../../../../../utils/trace';
 
 var d_factor = 0.85; //damping factor
@@ -128,3 +130,29 @@ for (let i = 0; i < 50; i++) {
 }
 
 console.log(formatResults(results));
+
+// initHTML();
+
+// const functions = [
+//   commonRandom,
+//   random_pages,
+//   init_array,
+//   map_page_rank,
+//   reduce_page_rank,
+//   main,
+// ];
+
+// let results = [];
+
+// for (let i = 0; i < 50; i++) {
+//   const statuses = getFunctionsStatusesHTML(functions);
+//   const start = Date.now();
+//   main(1000, 10, 0.00000001, 100000);
+//   const time = Date.now() - start;
+//   results.push(
+//     statuses.map(status => `<tr><td>${time}</td><td>${i}</td>${status}</tr>`),
+//   );
+// }
+
+// console.log(formatResults(results));
+// console.log('</table>');

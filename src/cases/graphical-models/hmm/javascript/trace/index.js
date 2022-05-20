@@ -2,6 +2,8 @@ import {
   init,
   getFunctionsStatuses,
   formatResults,
+  initHTML,
+  getFunctionsStatusesHTML,
 } from '../../../../../utils/trace';
 
 var T = 1000; /* Number of static observations */
@@ -667,3 +669,49 @@ for (let i = 0; i < 50; i++) {
 }
 
 console.log(formatResults(results));
+
+// initHTML();
+
+// const functions = [
+//   dot_product,
+//   mat_vec_mul,
+//   init_ones_dev,
+//   init_alpha,
+//   scale_alpha_values,
+//   calc_alpha_dev,
+//   log10,
+//   calc_alpha,
+//   init_beta_dev,
+//   calc_beta_dev,
+//   calc_beta,
+//   calc_gamma_dev,
+//   calc_gamma_sum,
+//   calc_xi_sum_dev,
+//   calc_xi_sum,
+//   est_a_dev,
+//   scale_a_dev,
+//   estimate_a,
+//   acc_b_dev,
+//   est_b_dev,
+//   scale_b_dev,
+//   estimate_b,
+//   est_pi_dev,
+//   estimate_pi,
+//   run_hmm_bwa,
+//   main,
+// ];
+
+// let results = [];
+
+// for (let i = 0; i < 50; i++) {
+//   const statuses = getFunctionsStatusesHTML(functions);
+//   const start = Date.now();
+//   main('n', 100);
+//   const time = Date.now() - start;
+//   results.push(
+//     statuses.map(status => `<tr><td>${time}</td><td>${i}</td>${status}</tr>`),
+//   );
+// }
+
+// console.log(formatResults(results));
+// console.log('</table>');
