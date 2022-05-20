@@ -1,4 +1,4 @@
-import {printFunctionsStatuses} from '../../../../../utils/trace';
+import {init, getFunctionsStatuses} from '../../../../../utils/trace';
 
 var bit_mask1 = parseInt('0xaaaaaaaa', 16);
 var bit_mask2 = parseInt('0xcccccccc', 16);
@@ -246,15 +246,18 @@ export function main(size) {
   return result;
 }
 
+init();
 for (let i = 0; i < 50; i++) {
-  printFunctionsStatuses([
-    bit_scan,
-    transform,
-    nqueen_solver,
-    nqueen_solver1,
-    nqueenJS,
-    main,
-  ]);
+  console.log(
+    getFunctionsStatuses([
+      bit_scan,
+      transform,
+      nqueen_solver,
+      nqueen_solver1,
+      nqueenJS,
+      main,
+    ]).join('\n'),
+  );
 
   main(8);
 }

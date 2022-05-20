@@ -1,9 +1,12 @@
-export function printFunctionsStatuses(fns) {
-  const results = [
+export function init() {
+  console.log(
     'name,isFunction,neverOptimize,alwaysOptimize,maybeDeopted,optimized,maglevved,turboFanned,interpreted,markedForOptimization,markedForConcurrentOptimization,optimizingConcurrently,isExecuting,topmostFrameIsTurboFanned,liteMode,markedForDeoptimization,baseline,topmostFrameIsInterpreted,topmostFrameIsBaseline',
-  ].concat(fns.map(fn => getFunctionStatus(fn)));
+  );
+}
 
-  console.log(results.join('\n'));
+export function getFunctionsStatuses(fns) {
+  const results = fns.map(fn => getFunctionStatus(fn));
+  return results;
 }
 
 function getFunctionStatus(fn) {
