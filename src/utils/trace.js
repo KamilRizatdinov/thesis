@@ -1,6 +1,6 @@
 export function init() {
   console.log(
-    'time,iteration,name,isFunction,neverOptimize,alwaysOptimize,maybeDeopted,optimized,maglevved,turboFanned,interpreted,markedForOptimization,markedForConcurrentOptimization,optimizingConcurrently,isExecuting,topmostFrameIsTurboFanned,liteMode,markedForDeoptimization,baseline,topmostFrameIsInterpreted,topmostFrameIsBaseline',
+    'time,iteration,name,isFunction,neverOptimize,alwaysOptimize,maybeDeopted,optimized,turboFanned,interpreted,markedForOptimization,markedForConcurrentOptimization,optimizingConcurrently,isExecuting,topmostFrameIsTurboFanned,liteMode,markedForDeoptimization,baseline,topmostFrameIsInterpreted,topmostFrameIsBaseline',
   );
 }
 
@@ -16,7 +16,6 @@ export function initHTML() {
         <th>alwaysOptimize</th>
         <th>maybeDeopted</th>
         <th>optimized</th>
-        <th>maglevved</th>
         <th>turboFanned</th>
         <th>interpreted</th>
         <th>markedForOptimization</th>
@@ -52,7 +51,7 @@ export function getFunctionsStatusesHTML(fns) {
 
 function getFunctionStatus(fn) {
   // NOTE: you should use --allow-natives-syntax in order to use V8 API calls
-  const status = %GetOptimizationStatus(fn).toString(2).padStart(18, '0');
+  const status = %GetOptimizationStatus(fn).toString(2).padStart(17, '0');
   const result = `${fn.name},` + status.split('').reverse().join();
 
   return result;
@@ -60,7 +59,7 @@ function getFunctionStatus(fn) {
 
 function getFunctionStatusHTML(fn) {
   // NOTE: you should use --allow-natives-syntax in order to use V8 API calls
-  const status = %GetOptimizationStatus(fn).toString(2).padStart(18, '0');
+  const status = %GetOptimizationStatus(fn).toString(2).padStart(17, '0');
   const result =
     `<td>${fn.name}</td><td>` +
     status.split('').reverse().join('</td><td>') +

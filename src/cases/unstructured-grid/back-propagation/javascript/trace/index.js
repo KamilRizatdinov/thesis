@@ -240,39 +240,7 @@ export function main(nb_input_elems) {
   backprop_face(nb_input_elems);
 }
 
-// init();
-
-// const functions = [
-//   commonRandom,
-//   commonRandomJS,
-//   squash,
-//   bpnn_internal_create,
-//   bpnn_randomize_array,
-//   loadInput,
-//   bpnn_randomize_row,
-//   bpnn_create,
-//   bpnn_train_kernel,
-//   bpnn_layerforward,
-//   bpnn_output_error,
-//   bpnn_hidden_error,
-//   bpnn_adjust_weights,
-//   backprop_face,
-//   main,
-// ];
-
-// let results = [];
-
-// for (let i = 0; i < 20; i++) {
-//   const statuses = getFunctionsStatuses(functions);
-//   const start = Date.now();
-//   main(2850000);
-//   const time = Date.now() - start;
-//   results.push(statuses.map(status => `${time},${i},${status}`));
-// }
-
-// console.log(formatResults(results));
-
-initHTML();
+init();
 
 const functions = [
   commonRandom,
@@ -295,14 +263,46 @@ const functions = [
 let results = [];
 
 for (let i = 0; i < 20; i++) {
-  const statuses = getFunctionsStatusesHTML(functions);
+  const statuses = getFunctionsStatuses(functions);
   const start = Date.now();
   main(2850000);
   const time = Date.now() - start;
-  results.push(
-    statuses.map(status => `<tr><td>${time}</td><td>${i}</td>${status}</tr>`),
-  );
+  results.push(statuses.map(status => `${time},${i},${status}`));
 }
 
 console.log(formatResults(results));
-console.log('</table>');
+
+// initHTML();
+
+// const functions = [
+//   commonRandom,
+//   commonRandomJS,
+//   squash,
+//   bpnn_internal_create,
+//   bpnn_randomize_array,
+//   loadInput,
+//   bpnn_randomize_row,
+//   bpnn_create,
+//   bpnn_train_kernel,
+//   bpnn_layerforward,
+//   bpnn_output_error,
+//   bpnn_hidden_error,
+//   bpnn_adjust_weights,
+//   backprop_face,
+//   main,
+// ];
+
+// let results = [];
+
+// for (let i = 0; i < 20; i++) {
+//   const statuses = getFunctionsStatusesHTML(functions);
+//   const start = Date.now();
+//   main(2850000);
+//   const time = Date.now() - start;
+//   results.push(
+//     statuses.map(status => `<tr><td>${time}</td><td>${i}</td>${status}</tr>`),
+//   );
+// }
+
+// console.log(formatResults(results));
+// console.log('</table>');
