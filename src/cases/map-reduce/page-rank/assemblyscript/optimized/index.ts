@@ -27,7 +27,7 @@ function random_pages(
   for (i = 0; i < n; ++i) {
     unchecked((noutlinks[i] = 0));
     for (j = 0; j < n; ++j) {
-      if (i != j && Math.abs(commonRandom()) % divisor === 0) {
+      if (i != j && Math.abs(commonRandom()) % divisor == 0) {
         unchecked((pages[i * n + j] = 1));
         unchecked((noutlinks[i] += 1));
       }
@@ -66,7 +66,7 @@ function map_page_rank(
     for (j = 0; j < n; ++j) {
       unchecked(
         (maps[i * n + j] =
-          pages[i * n + j] === 0 ? 0 : pages[i * n + j] * outbound_rank),
+          pages[i * n + j] == 0 ? 0 : pages[i * n + j] * outbound_rank),
       );
     }
   }

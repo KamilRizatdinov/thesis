@@ -249,7 +249,7 @@ class CSR {
     this.Ax = new StaticArray<f32>(this.num_nonzeros);
     for (i = 0; i < <i32>this.num_nonzeros; ++i) {
       unchecked((this.Ax[i] = randf()));
-      while (unchecked(this.Ax[i] === 0.0)) unchecked((this.Ax[i] = randf()));
+      while (unchecked(this.Ax[i] == 0.0)) unchecked((this.Ax[i] = randf()));
     }
   }
 }

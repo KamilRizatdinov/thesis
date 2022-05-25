@@ -32,7 +32,7 @@ function dot_product(
 ): f32 {
   var result: f32 = 0.0;
   var i = 0;
-  if (!x || !y || n === 0) return result;
+  if (!x || !y || n == 0) return result;
   for (i = 0; i < n; ++i) result += x[i + offsetx] * y[i + offsety];
   return result;
 }

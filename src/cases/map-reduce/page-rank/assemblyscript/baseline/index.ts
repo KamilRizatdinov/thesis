@@ -23,7 +23,7 @@ function random_pages(n: i32, noutlinks: Int32Array, divisor: i32): Int32Array {
   for (i = 0; i < n; ++i) {
     noutlinks[i] = 0;
     for (j = 0; j < n; ++j) {
-      if (i != j && Math.abs(commonRandom()) % divisor === 0) {
+      if (i != j && Math.abs(commonRandom()) % divisor == 0) {
         pages[i * n + j] = 1;
         noutlinks[i] += 1;
       }
@@ -61,7 +61,7 @@ function map_page_rank(
     var outbound_rank = page_ranks[i] / noutlinks[i];
     for (j = 0; j < n; ++j) {
       maps[i * n + j] =
-        pages[i * n + j] === 0 ? 0 : pages[i * n + j] * outbound_rank;
+        pages[i * n + j] == 0 ? 0 : pages[i * n + j] * outbound_rank;
     }
   }
 }

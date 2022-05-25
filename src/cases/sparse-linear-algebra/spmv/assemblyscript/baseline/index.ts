@@ -240,7 +240,7 @@ class CSR {
     this.Ax = new Float32Array(this.num_nonzeros);
     for (i = 0; i < <i32>this.num_nonzeros; ++i) {
       this.Ax[i] = randf();
-      while (this.Ax[i] === 0.0) {
+      while (this.Ax[i] == 0.0) {
         this.Ax[i] = randf();
       }
     }

@@ -37,7 +37,7 @@ function fftSimple(r: StaticArray<f64>, i: StaticArray<f64>): PolarCoords {
 
   var k: i32;
 
-  if (N === 1) {
+  if (N == 1) {
     unchecked((R[0] = r[0]));
     unchecked((I[0] = i[0]));
     return {r: R, i: I};

@@ -37,7 +37,7 @@ function fftSimple(r: Float64Array, i: Float64Array): PolarCoords {
 
   var k: i32;
 
-  if (N === 1) {
+  if (N == 1) {
     R[0] = r[0];
     I[0] = i[0];
     return {r: R, i: I};
