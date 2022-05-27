@@ -10,7 +10,7 @@
     "release": {
       "outFile": "../build/assemblyscript/index.wasm",
       "textFile": "../build/assemblyscript/index.wat",
-      "sourceMap": true,
+      "sourceMap": false,
       "converge": false,
       "noAssert": false,
       "exportRuntime": true
